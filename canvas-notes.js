@@ -140,3 +140,9 @@ use jquery to listen for changes to math equations
 
 use hash change/set hash to save equations in url
 use request animation frame and a t variable to constantly replot while changing a function
+
+
+# ideas
+
+get online through github
+draw polar spiral

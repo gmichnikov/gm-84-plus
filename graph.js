@@ -22,8 +22,17 @@ function calcYPixel(xCoord, c) {
   return (-canvas.height / 20) * yCoord + (canvas.height / 2)
 }
 
+function calcYPixelSin(xCoord, c) {
+  let yCoord = c * math.sin(xCoord + c);
+  return (-canvas.height / 20) * yCoord + (canvas.height / 2)
+}
+
+function rand256() {
+  return math.randomInt(0,256);
+}
+
 function randomColor(opacity = 1) {
-  return `rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${opacity}`;
+  return `rgba(${rand256()}, ${rand256()}, ${rand256()}, ${opacity}`;
 }
 
 function drawParabola(c) {
@@ -38,25 +47,59 @@ function drawParabola(c) {
   }
 }
 
-drawAxes();
-// drawParabola(-40);
+function drawSin(c) {
+  for (var xPixel = 0; xPixel < canvas.width; xPixel++) {
+    let xCoord = calcXCoord(xPixel);
+    let yPixel = calcYPixelSin(xCoord, c);
+    ctx.beginPath();
+    ctx.arc(xPixel, yPixel, 3, 0, Math.PI*2);
+    ctx.fillStyle = randomColor();
+    ctx.fill();
+    ctx.closePath();
+  }
+}
 
-let c = -20;
+let c = -10;
 function step() {
   drawAxes();
-  drawParabola(c)
-  c += 0.2;
+  // drawParabola(c)
+  drawSin(c)
+  c += 0.1;
   if (c < 10) {
     window.requestAnimationFrame(step);
   }
 }
-
 window.requestAnimationFrame(step);
+
+function logEquation(){
+  let expr = document.getElementById('expression');
+  let xVal = document.getElementById('x-value');
+  let result = document.getElementById('result');
+  let pretty = document.getElementById('pretty');
+
+  let node = null;
+
+  try {
+    node = math.parse(expr.value);
+    result.innerHTML = math.format(node.compile().eval());
+  }
+  catch (err) {
+    result.innerHTML = '<span style="color: red;">' + err.toString() + '</span>';
+  }
+
+  try {
+    let latex = node ? node.toTex({implicit:'show'}) : '';
+    console.log("latex", latex);
+    let elem = MathJax.Hub.getAllJax('pretty')[0];
+    MathJax.Hub.Queue(['Text', elem, latex]);
+  }
+    catch (err) {}
+  }
+
 
 
 document.addEventListener("mousemove", mouseMoveHandler, false);
-
 function mouseMoveHandler(e) {
     let relativeX = e.clientX - canvas.offsetLeft;
-    // console.log(calcXCoord(relativeX));
+    // console.log(math.round(calcXCoord(relativeX), 1));
 }

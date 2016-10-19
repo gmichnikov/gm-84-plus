@@ -14,16 +14,20 @@
         margin: 50px auto;
       }
     </style>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/3.5.3/math.js" charset="utf-8"></script>
-    <script src="<script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>" charset="utf-8"></script>
+
+    <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" charset="utf-8"></script>
+
   </head>
   <body>
 
     <canvas id="myCanvas" width="700" height="500"></canvas>
-
+    <input id="expression" oninput="logEquation()"/>
+    <input id="x-value" oninput="logEquation()" />
+    <div id="result">None Yet</div>
+    <div id="pretty">$$$$</div>
     <script src="graph.js" charset="utf-8"></script>
-
-
 
   </body>
 
