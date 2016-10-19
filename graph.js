@@ -19,11 +19,11 @@ function drawAxes() {
 }
 
 
-document.addEventListener("mousemove", mouseMoveHandler, false);
-function mouseMoveHandler(e) {
-    let relativeX = e.clientX - canvas.offsetLeft;
-    // console.log(math.round(calcXCoord(relativeX), 1));
-}
+// document.addEventListener("mousemove", mouseMoveHandler, false);
+// function mouseMoveHandler(e) {
+//     let relativeX = e.clientX - canvas.offsetLeft;
+//     // console.log(math.round(calcXCoord(relativeX), 1));
+// }
 
 function calcXCoord(xPixel) {
   return (xPixel - canvas.width / 2) / (canvas.width/20);
@@ -84,7 +84,8 @@ function drawAnything(compiledExpr, c) {
 
       ctx.beginPath();
       ctx.arc(xPixel, yPixel, 3, 0, Math.PI*2);
-      ctx.fillStyle = randomColor();
+      // ctx.fillStyle = randomColor();
+      ctx.fillStyle = $("#colorpicker").spectrum("get");
       ctx.fill();
       ctx.closePath();
     }
@@ -118,6 +119,9 @@ function drawGraphOnce(compiledExpr) {
 }
 
 function animateGraphNow() {
+  let colorpicker = document.getElementById('colorpicker');
+  console.log(colorpicker.value);
+
   let drawButton = document.getElementById('draw-graph');
   drawButton.disabled = true;
 
@@ -162,3 +166,15 @@ function logEquation(){ // called on input in forms
   catch (err) {
   }
 }
+
+
+$("#colorpicker").spectrum({
+  showPaletteOnly: true,
+  showPalette:true,
+  hideAfterPaletteSelect:true,
+  color: 'black',
+  palette: [
+      ['red', 'orange', 'yellow', 'green', 'blue', 'violet', 'black']
+  ],
+  change: logEquation,
+});
