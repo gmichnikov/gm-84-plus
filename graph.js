@@ -81,7 +81,9 @@ function logEquation(){
 
   try {
     node = math.parse(expr.value);
-    result.innerHTML = math.format(node.compile().eval());
+    let compiledExpr = node.compile();
+    let scope = {x: xVal.value}
+    result.innerHTML = math.format(compiledExpr.eval(scope));
   }
   catch (err) {
     result.innerHTML = '<span style="color: red;">' + err.toString() + '</span>';
