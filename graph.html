@@ -13,7 +13,7 @@
         display: block;
         margin: 50px auto;
       }
-      div, input {
+      div, input, button {
         margin-left: 5px;
       }
     </style>
@@ -26,6 +26,8 @@
   <body>
 
     <canvas id="myCanvas" width="700" height="500"></canvas>
+    <button id="draw-graph" onclick="drawGraph()">Draw graph</button>
+    <br />
     <input id="expression" oninput="logEquation()"/>
     <input id="x-value" oninput="logEquation()" />
     <div id="result">None Yet</div>

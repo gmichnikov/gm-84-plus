@@ -18,6 +18,13 @@ function drawAxes() {
   ctx.fillText("10", canvas.width/2, 14);
 }
 
+
+document.addEventListener("mousemove", mouseMoveHandler, false);
+function mouseMoveHandler(e) {
+    let relativeX = e.clientX - canvas.offsetLeft;
+    // console.log(math.round(calcXCoord(relativeX), 1));
+}
+
 function calcXCoord(xPixel) {
   return (xPixel - canvas.width / 2) / (canvas.width/20);
 }
@@ -66,19 +73,31 @@ function drawSin(c) {
   }
 }
 
-let c = -10;
-function step() {
-  drawAxes();
-  // drawParabola(c)
-  drawSin(c)
-  c += 0.1;
-  if (c < 10) {
-    window.requestAnimationFrame(step);
+function animateGraph() {
+  let c = -10;
+  function step() {
+    drawAxes();
+    // drawParabola(c)
+    drawSin(c)
+    c += 0.1;
+    if (c < 10) {
+      window.requestAnimationFrame(step);
+    } else {
+      let drawButton = document.getElementById('draw-graph');
+      drawButton.disabled = false;
+    }
   }
+  window.requestAnimationFrame(step);
 }
-window.requestAnimationFrame(step);
 
-function logEquation(){
+function drawGraph() {
+  let drawButton = document.getElementById('draw-graph');
+  drawButton.disabled = true;
+  animateGraph();
+}
+
+
+function logEquation(){ // called on input in forms
   let expr = document.getElementById('expression');
   let xVal = document.getElementById('x-value');
   let result = document.getElementById('result');
@@ -102,13 +121,6 @@ function logEquation(){
     let elem = MathJax.Hub.getAllJax('pretty')[0];
     MathJax.Hub.Queue(['Text', elem, latex]);
   }
-    catch (err) {}
+  catch (err) {
   }
-
-
-
-document.addEventListener("mousemove", mouseMoveHandler, false);
-function mouseMoveHandler(e) {
-    let relativeX = e.clientX - canvas.offsetLeft;
-    // console.log(math.round(calcXCoord(relativeX), 1));
 }
