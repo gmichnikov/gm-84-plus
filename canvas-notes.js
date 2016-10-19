@@ -111,6 +111,17 @@ ctx.stroke();
 
 closePath brings the last point back to the first
 
+// example of oninput
+<script>
+function setLabel(txtBox){
+  let words = document.getElementById('words').value;
+  console.log(words);
+  document.getElementById('lbl').setAttribute('value', words);
+}
+</script>
+<label id="lbl">Hi</label>
+<input id="words" oninput="setLabel()"/>
+
 # notes
 
 draw many lines to draw a curve
