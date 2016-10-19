@@ -9,6 +9,13 @@ function drawAxes() {
   ctx.fillStyle = "#FF0000";
   ctx.fill();
   ctx.closePath();
+  ctx.textAlign = "center";
+  ctx.fillStyle = "white";
+  ctx.font = "16px Arial";
+  let textWidth = ctx.measureText('10').width;
+  ctx.fillRect(canvas.width/2 - textWidth/2, 0, textWidth, 20)
+  ctx.fillStyle = "purple";
+  ctx.fillText("10", canvas.width/2, 14);
 }
 
 function calcXCoord(xPixel) {
