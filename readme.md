@@ -32,8 +32,8 @@ This project will be implemented with the following technologies:
 
 - Vanilla JavaScript and `jQuery` for overall structure and logic,
 - `HTML5 Canvas` for rendering of the graphs,
-- `Mathquill` for typing/displaying math equation,
-- `Math.js` for more advanced math calculations,
+- `MathJax` for displaying math equations,
+- `Math.js` for parsing strings into expressions, and for more advanced math calculations,
 - `jQuery` for a slider,
 - Webpack to bundle and serve up the various scripts.
 

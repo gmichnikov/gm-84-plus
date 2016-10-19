@@ -73,13 +73,34 @@ function drawSin(c) {
   }
 }
 
-function animateGraph() {
+function drawAnything(compiledExpr, c) {
+  for (var xPixel = 0; xPixel < canvas.width; xPixel++) {
+    let xCoord = calcXCoord(xPixel);
+    let scope = {x: xCoord, c: c}
+
+    try {
+      let yCoord = math.format(compiledExpr.eval(scope));
+      let yPixel = (-canvas.height / 20) * yCoord + (canvas.height / 2)
+
+      ctx.beginPath();
+      ctx.arc(xPixel, yPixel, 3, 0, Math.PI*2);
+      ctx.fillStyle = randomColor();
+      ctx.fill();
+      ctx.closePath();
+    }
+    catch (err) {
+    }
+  }
+}
+
+function animateGraph(compiledExpr) {
   let c = -10;
   function step() {
     drawAxes();
     // drawParabola(c)
-    drawSin(c)
-    c += 0.1;
+    // drawSin(c)
+    drawAnything(compiledExpr, c);
+    c += 0.5;
     if (c < 10) {
       window.requestAnimationFrame(step);
     } else {
@@ -90,10 +111,25 @@ function animateGraph() {
   window.requestAnimationFrame(step);
 }
 
-function drawGraph() {
+
+function drawGraphOnce(compiledExpr) {
+  drawAxes();
+  drawAnything(compiledExpr, 0);
+}
+
+function animateGraphNow() {
   let drawButton = document.getElementById('draw-graph');
   drawButton.disabled = true;
-  animateGraph();
+
+  let expr = document.getElementById('expression');
+
+  try {
+    let node = math.parse(expr.value);
+    let compiledExpr = node.compile();
+    animateGraph(compiledExpr);
+  }
+  catch (err) {
+  }
 }
 
 
@@ -108,7 +144,9 @@ function logEquation(){ // called on input in forms
   try {
     node = math.parse(expr.value);
     let compiledExpr = node.compile();
-    let scope = {x: xVal.value}
+    drawGraphOnce(compiledExpr);
+    // result.innerHTML = '';
+    let scope = {x: xVal.value, c: 0};
     result.innerHTML = math.format(compiledExpr.eval(scope));
   }
   catch (err) {
