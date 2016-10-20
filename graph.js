@@ -74,6 +74,11 @@ function drawSin(c) {
 }
 
 function drawAnything(compiledExpr, c) {
+
+  ctx.fillStyle = "black";
+  let chooseRandom = document.getElementById("randomColor").checked;
+  let selectedColor = $("#colorpicker").spectrum("get");
+
   for (var xPixel = 0; xPixel < canvas.width; xPixel++) {
     let xCoord = calcXCoord(xPixel);
     let scope = {x: xCoord, c: c}
@@ -84,8 +89,7 @@ function drawAnything(compiledExpr, c) {
 
       ctx.beginPath();
       ctx.arc(xPixel, yPixel, 3, 0, Math.PI*2);
-      // ctx.fillStyle = randomColor();
-      ctx.fillStyle = $("#colorpicker").spectrum("get");
+      ctx.fillStyle = chooseRandom ? randomColor() : selectedColor;
       ctx.fill();
       ctx.closePath();
     }
@@ -173,8 +177,8 @@ $("#colorpicker").spectrum({
   showPalette:true,
   hideAfterPaletteSelect:true,
   color: 'black',
-  palette: [
-      ['red', 'orange', 'yellow', 'green', 'blue', 'violet', 'black']
-  ],
+  palette: ['black', 'red', 'orange', 'yellow', 'green', 'blue', 'violet'],
   change: logEquation,
 });
+
+$("#randomColor").change(logEquation);
