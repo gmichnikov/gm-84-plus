@@ -135,8 +135,11 @@
 	  }, {
 	    key: 'drawAxisLabels',
 	    value: function drawAxisLabels() {
-	      var yMaxLabelHeight = 14;
 	      var estFontHeight = 20;
+	      var yMaxLabelHeight = 16;
+	      var yMinLabelHeight = this.canvas.height - estFontHeight + 16;
+	      var xMaxLabelX = this.canvas.width;
+	      var xMinLabelX = 0;
 	      this.ctx.textAlign = "center";
 	      this.ctx.font = "16px Arial";
 	
@@ -144,10 +147,18 @@
 	      var xMaxTextWidth = this.ctx.measureText(this.xMax).width;
 	      var yMinTextWidth = this.ctx.measureText(this.yMin).width;
 	      var yMaxTextWidth = this.ctx.measureText(this.yMax).width;
+	
 	      this.ctx.fillStyle = "purple";
 	      this.ctx.fillRect(this.yAxisPixelsOver - yMaxTextWidth / 2, 0, yMaxTextWidth, estFontHeight);
+	      this.ctx.fillRect(this.yAxisPixelsOver - yMinTextWidth / 2, this.canvas.height - estFontHeight, yMinTextWidth, estFontHeight);
+	      this.ctx.fillRect(0, this.xAxisPixelsDown - estFontHeight / 2, xMinTextWidth, estFontHeight);
+	      this.ctx.fillRect(this.canvas.width - xMaxTextWidth, this.xAxisPixelsDown - estFontHeight / 2, xMaxTextWidth, estFontHeight);
+	
 	      this.ctx.fillStyle = "white";
 	      this.ctx.fillText(this.yMax, this.yAxisPixelsOver, yMaxLabelHeight);
+	      this.ctx.fillText(this.yMin, this.yAxisPixelsOver, yMinLabelHeight);
+	      this.ctx.fillText(this.xMin, xMinTextWidth / 2, this.xAxisPixelsDown + 7);
+	      this.ctx.fillText(this.xMax, this.canvas.width - xMaxTextWidth / 2, this.xAxisPixelsDown + 7);
 	    }
 	  }]);
 	
