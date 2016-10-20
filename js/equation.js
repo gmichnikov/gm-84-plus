@@ -23,8 +23,8 @@ class Equation {
 
     $("#randomColor").on("change", () => this.logEquation());
     $('#draw-graph').on("click", () => this.animateGraphNow());
-    $('#expression').on("input", () => this.logEquation());
-    $('#x-value').on("input", () => this.logEquation());
+    $('.trigger-redraw').on("input", () => this.logEquation());
+    $('.c-data').on("input", () => this.adjustSliderBounds());
 
     $( function() {
       var handle = $( "#custom-handle" );
@@ -48,6 +48,13 @@ class Equation {
   drawGraphOnce(compiledExpr, c = 0) {
     this.plane.drawAxes();
     this.drawAnything(compiledExpr, c);
+  }
+
+  adjustSliderBounds() {
+    let cMinVal = parseFloat(document.getElementById('c-min').value);
+    let cMaxVal = parseFloat(document.getElementById('c-max').value);
+    $( "#slider" ).slider( "option", "min", cMinVal );
+    $( "#slider" ).slider( "option", "max", cMaxVal );
   }
 
   logEquation(c) { // called on input in forms

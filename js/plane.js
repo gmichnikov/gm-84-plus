@@ -2,9 +2,9 @@ import Equation from './equation.js';
 import * as UTIL from './util';
 
 class Plane {
-  constructor(canvas, ctx) {
+  constructor(ctx, xMin = -10, xMax = 10, yMin = -10, yMax = 10) {
     this.ctx = ctx;
-    this.canvas = canvas;
+    this.canvas = ctx.canvas;
     this.equation = new Equation(this);
   }
 

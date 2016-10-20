@@ -61,7 +61,8 @@
 	var canvas = document.getElementById("myCanvas");
 	var ctx = canvas.getContext("2d");
 	
-	var plane = new _plane2.default(canvas, ctx);
+	var plane = new _plane2.default(ctx);
+	plane.drawAxes();
 	
 	// document.addEventListener("mousemove", mouseMoveHandler, false);
 	// function mouseMoveHandler(e) {
@@ -96,11 +97,16 @@
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
 	var Plane = function () {
-	  function Plane(canvas, ctx) {
+	  function Plane(ctx) {
+	    var xMin = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : -10;
+	    var xMax = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 10;
+	    var yMin = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : -10;
+	    var yMax = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 10;
+	
 	    _classCallCheck(this, Plane);
 	
 	    this.ctx = ctx;
-	    this.canvas = canvas;
+	    this.canvas = ctx.canvas;
 	    this.equation = new _equation2.default(this);
 	  }
 	
@@ -182,11 +188,11 @@
 	      $('#draw-graph').on("click", function () {
 	        return _this.animateGraphNow();
 	      });
-	      $('#expression').on("input", function () {
+	      $('.trigger-redraw').on("input", function () {
 	        return _this.logEquation();
 	      });
-	      $('#x-value').on("input", function () {
-	        return _this.logEquation();
+	      $('.c-data').on("input", function () {
+	        return _this.adjustSliderBounds();
 	      });
 	
 	      $(function () {
@@ -214,6 +220,14 @@
 	
 	      this.plane.drawAxes();
 	      this.drawAnything(compiledExpr, c);
+	    }
+	  }, {
+	    key: 'adjustSliderBounds',
+	    value: function adjustSliderBounds() {
+	      var cMinVal = parseFloat(document.getElementById('c-min').value);
+	      var cMaxVal = parseFloat(document.getElementById('c-max').value);
+	      $("#slider").slider("option", "min", cMinVal);
+	      $("#slider").slider("option", "max", cMaxVal);
 	    }
 	  }, {
 	    key: 'logEquation',

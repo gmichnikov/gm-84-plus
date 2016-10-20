@@ -18,11 +18,11 @@ div, input, button {
 }
 
 #custom-handle {
-  width: 2em;
+  width: 3em;
   height: 1.4em;
   top: 50%;
   margin-top: -.8em;
   text-align: center;
   line-height: 1.4em;
-  font-size: 15px;
+  font-size: 12px;
 }

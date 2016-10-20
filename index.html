@@ -35,14 +35,14 @@
 
     <br />
 
-    expression <input id="expression" value="x * c * sin(x+c)"/>
-    sample x <input id="x-value" />
+    expression <input id="expression" class="trigger-redraw" value="x * sin(x+c)"/>
+    sample x <input id="x-value" class="trigger-redraw" />
 
     <br />
 
-    c min<input id="c-min" value="-10"></input>
-    c max<input id="c-max" value="10"></input>
-    c increment<input id="c-increment" value="0.4"></input>
+    c min<input class="c-data" id="c-min" value="-10"></input>
+    c max<input class="c-data" id="c-max" value="10"></input>
+    c increment<input class="c-data" id="c-increment" value="0.4"></input>
 
     <div id="c-value"></div>
     expression value: <span id="result">None Yet</span>
