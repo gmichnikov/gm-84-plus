@@ -63,12 +63,6 @@
 	
 	var plane = new _plane2.default(ctx);
 	// plane.drawAxes();
-	
-	
-	// document.addEventListener("mousemove", mouseMoveHandler, false);
-	// function mouseMoveHandler(e) {
-	//     let relativeX = e.clientX - canvas.offsetLeft;
-	// }
 
 /***/ },
 /* 1 */
@@ -112,7 +106,11 @@
 	    this.xMax = xMax;
 	    this.yMin = yMin;
 	    this.yMax = yMax;
-	    this.zoomFactor = 1.1;
+	    this.zoomFactor = 1.15;
+	
+	    this.mouseXPixel = this.canvas.width / 2;
+	    this.mouseYPixel = this.canvas.height / 2;
+	
 	    this.updateAxisLocations();
 	    this.bindEvents();
 	
@@ -141,20 +139,33 @@
 	          that.zoom("out");
 	        }
 	      });
+	      document.addEventListener("mousemove", mouseMoveHandler, false);
+	
+	      function mouseMoveHandler(e) {
+	        that.mouseXPixel = e.clientX - that.canvas.offsetLeft;
+	        that.mouseYPixel = e.clientY - that.canvas.offsetTop;
+	      }
+	    }
+	  }, {
+	    key: 'mouseInBounds',
+	    value: function mouseInBounds() {
+	      return this.mouseXPixel > 0 && this.mouseXPixel < this.canvas.width && this.mouseYPixel > 0 && this.mouseYPixel < this.canvas.height;
 	    }
 	  }, {
 	    key: 'zoom',
 	    value: function zoom(direction) {
-	      var multiplier = direction === "in" ? 1 / this.zoomFactor : this.zoomFactor;
+	      if (this.mouseInBounds()) {
+	        var multiplier = direction === "in" ? 1 / this.zoomFactor : this.zoomFactor;
 	
-	      var centerX = (this.xMax + this.xMin) / 2;
-	      this.xMax = (this.xMax - centerX) * multiplier + centerX;
-	      this.xMin = centerX - (centerX - this.xMin) * multiplier;
+	        var centerX = (this.xMax + this.xMin) / 2;
+	        this.xMax = (this.xMax - centerX) * multiplier + centerX;
+	        this.xMin = centerX - (centerX - this.xMin) * multiplier;
 	
-	      var centerY = (this.yMax + this.yMin) / 2;
-	      this.yMax = (this.yMax - centerY) * multiplier + centerY;
-	      this.yMin = centerY - (centerY - this.yMin) * multiplier;
-	      this.resetWindow(this.xMin, this.xMax, this.yMin, this.yMax);
+	        var centerY = (this.yMax + this.yMin) / 2;
+	        this.yMax = (this.yMax - centerY) * multiplier + centerY;
+	        this.yMin = centerY - (centerY - this.yMin) * multiplier;
+	        this.resetWindow(this.xMin, this.xMax, this.yMin, this.yMax);
+	      }
 	    }
 	  }, {
 	    key: 'updateAxisLocations',
@@ -206,10 +217,10 @@
 	      this.ctx.textAlign = "center";
 	      this.ctx.font = "16px Arial";
 	
-	      var xMinTextWidth = this.ctx.measureText(this.xMin).width;
-	      var xMaxTextWidth = this.ctx.measureText(this.xMax).width;
-	      var yMinTextWidth = this.ctx.measureText(this.yMin).width;
-	      var yMaxTextWidth = this.ctx.measureText(this.yMax).width;
+	      var xMinTextWidth = this.ctx.measureText(math.round(this.xMin, 1)).width;
+	      var xMaxTextWidth = this.ctx.measureText(math.round(this.xMax, 1)).width;
+	      var yMinTextWidth = this.ctx.measureText(math.round(this.yMin, 1)).width;
+	      var yMaxTextWidth = this.ctx.measureText(math.round(this.yMax, 1)).width;
 	
 	      this.ctx.fillStyle = "purple";
 	      this.ctx.fillRect(this.yAxisPixelsOver - yMaxTextWidth / 2, 0, yMaxTextWidth, estFontHeight);
@@ -218,10 +229,10 @@
 	      this.ctx.fillRect(this.canvas.width - xMaxTextWidth, this.xAxisPixelsDown - estFontHeight / 2, xMaxTextWidth, estFontHeight);
 	
 	      this.ctx.fillStyle = "white";
-	      this.ctx.fillText(this.yMax, this.yAxisPixelsOver, yMaxLabelHeight);
-	      this.ctx.fillText(this.yMin, this.yAxisPixelsOver, yMinLabelHeight);
-	      this.ctx.fillText(this.xMin, xMinTextWidth / 2, this.xAxisPixelsDown + 7);
-	      this.ctx.fillText(this.xMax, this.canvas.width - xMaxTextWidth / 2, this.xAxisPixelsDown + 7);
+	      this.ctx.fillText(math.round(this.yMax, 1), this.yAxisPixelsOver, yMaxLabelHeight);
+	      this.ctx.fillText(math.round(this.yMin, 1), this.yAxisPixelsOver, yMinLabelHeight);
+	      this.ctx.fillText(math.round(this.xMin, 1), xMinTextWidth / 2, this.xAxisPixelsDown + 7);
+	      this.ctx.fillText(math.round(this.xMax, 1), this.canvas.width - xMaxTextWidth / 2, this.xAxisPixelsDown + 7);
 	    }
 	  }]);
 	

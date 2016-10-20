@@ -10,7 +10,11 @@ class Plane {
     this.xMax = xMax;
     this.yMin = yMin;
     this.yMax = yMax;
-    this.zoomFactor = 1.1;
+    this.zoomFactor = 1.15;
+
+    this.mouseXPixel = this.canvas.width/2;
+    this.mouseYPixel = this.canvas.height/2;
+
     this.updateAxisLocations();
     this.bindEvents();
 
@@ -30,19 +34,31 @@ class Plane {
         that.zoom("out");
       }
     });
+    document.addEventListener("mousemove", mouseMoveHandler, false);
+
+    function mouseMoveHandler(e) {
+      that.mouseXPixel = e.clientX - that.canvas.offsetLeft;
+      that.mouseYPixel = e.clientY - that.canvas.offsetTop;
+    }
+  }
+
+  mouseInBounds() {
+    return this.mouseXPixel > 0 && this.mouseXPixel < this.canvas.width && this.mouseYPixel > 0 && this.mouseYPixel < this.canvas.height;
   }
 
   zoom(direction) {
-    let multiplier = (direction === "in" ? 1/this.zoomFactor : this.zoomFactor);
+    if(this.mouseInBounds()) {
+      let multiplier = (direction === "in" ? 1/this.zoomFactor : this.zoomFactor);
 
-    let centerX = (this.xMax + this.xMin) / 2;
-    this.xMax = (this.xMax - centerX) * multiplier + centerX;
-    this.xMin = centerX - (centerX - this.xMin) * multiplier;
+      let centerX = (this.xMax + this.xMin) / 2;
+      this.xMax = (this.xMax - centerX) * multiplier + centerX;
+      this.xMin = centerX - (centerX - this.xMin) * multiplier;
 
-    let centerY = (this.yMax + this.yMin) / 2;
-    this.yMax = (this.yMax - centerY) * multiplier + centerY;
-    this.yMin = centerY - (centerY - this.yMin) * multiplier;
-    this.resetWindow(this.xMin, this.xMax, this.yMin, this.yMax);
+      let centerY = (this.yMax + this.yMin) / 2;
+      this.yMax = (this.yMax - centerY) * multiplier + centerY;
+      this.yMin = centerY - (centerY - this.yMin) * multiplier;
+      this.resetWindow(this.xMin, this.xMax, this.yMin, this.yMax);
+    }
   }
 
   updateAxisLocations() {
@@ -89,10 +105,10 @@ class Plane {
     this.ctx.textAlign = "center";
     this.ctx.font = "16px Arial";
 
-    let xMinTextWidth = this.ctx.measureText(this.xMin).width;
-    let xMaxTextWidth = this.ctx.measureText(this.xMax).width;
-    let yMinTextWidth = this.ctx.measureText(this.yMin).width;
-    let yMaxTextWidth = this.ctx.measureText(this.yMax).width;
+    let xMinTextWidth = this.ctx.measureText(math.round(this.xMin, 1)).width;
+    let xMaxTextWidth = this.ctx.measureText(math.round(this.xMax, 1)).width;
+    let yMinTextWidth = this.ctx.measureText(math.round(this.yMin, 1)).width;
+    let yMaxTextWidth = this.ctx.measureText(math.round(this.yMax, 1)).width;
 
     this.ctx.fillStyle = "purple";
     this.ctx.fillRect(this.yAxisPixelsOver - yMaxTextWidth/2, 0, yMaxTextWidth, estFontHeight);
@@ -102,10 +118,10 @@ class Plane {
 
 
     this.ctx.fillStyle = "white";
-    this.ctx.fillText(this.yMax, this.yAxisPixelsOver, yMaxLabelHeight);
-    this.ctx.fillText(this.yMin, this.yAxisPixelsOver, yMinLabelHeight);
-    this.ctx.fillText(this.xMin, xMinTextWidth/2, this.xAxisPixelsDown + 7);
-    this.ctx.fillText(this.xMax, this.canvas.width - xMaxTextWidth/2, this.xAxisPixelsDown + 7);
+    this.ctx.fillText(math.round(this.yMax, 1), this.yAxisPixelsOver, yMaxLabelHeight);
+    this.ctx.fillText(math.round(this.yMin, 1), this.yAxisPixelsOver, yMinLabelHeight);
+    this.ctx.fillText(math.round(this.xMin, 1), xMinTextWidth/2, this.xAxisPixelsDown + 7);
+    this.ctx.fillText(math.round(this.xMax, 1), this.canvas.width - xMaxTextWidth/2, this.xAxisPixelsDown + 7);
   }
 
 }

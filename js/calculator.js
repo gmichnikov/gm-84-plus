@@ -6,11 +6,3 @@ var ctx = canvas.getContext("2d");
 
 const plane = new Plane(ctx);
 // plane.drawAxes();
-
-
-
-
-// document.addEventListener("mousemove", mouseMoveHandler, false);
-// function mouseMoveHandler(e) {
-//     let relativeX = e.clientX - canvas.offsetLeft;
-// }
