@@ -99,14 +99,27 @@ function drawAnything(compiledExpr, c) {
 }
 
 function animateGraph(compiledExpr) {
-  let c = -10;
+  let cValue = document.getElementById('c-value');
+  let cMinVal = parseFloat(document.getElementById('c-min').value);
+  let cMaxVal = parseFloat(document.getElementById('c-max').value);
+  let cIncrementVal = parseFloat(document.getElementById('c-increment').value);
+
+  console.log(cMinVal, cMaxVal, cIncrementVal);
+
+  let c = cMinVal;
+
   function step() {
     drawAxes();
     // drawParabola(c)
     // drawSin(c)
+
     drawAnything(compiledExpr, c);
-    c += 0.5;
-    if (c < 10) {
+    cValue.innerHTML = `c = ${c}`;
+    $( "#slider" ).slider( "value", c );
+    $( "#custom-handle" ).text(c);
+
+    c = math.round(c + cIncrementVal, 2);
+    if (c <= cMaxVal) {
       window.requestAnimationFrame(step);
     } else {
       let drawButton = document.getElementById('draw-graph');
@@ -117,14 +130,13 @@ function animateGraph(compiledExpr) {
 }
 
 
-function drawGraphOnce(compiledExpr) {
+function drawGraphOnce(compiledExpr, c = 0) {
   drawAxes();
-  drawAnything(compiledExpr, 0);
+  drawAnything(compiledExpr, c);
 }
 
 function animateGraphNow() {
   let colorpicker = document.getElementById('colorpicker');
-  console.log(colorpicker.value);
 
   let drawButton = document.getElementById('draw-graph');
   drawButton.disabled = true;
@@ -141,7 +153,12 @@ function animateGraphNow() {
 }
 
 
-function logEquation(){ // called on input in forms
+function logEquation(c){ // called on input in forms
+  if (typeof(c) !== "number") {
+    c = 0;
+  }
+  console.log("C", c);
+
   let expr = document.getElementById('expression');
   let xVal = document.getElementById('x-value');
   let result = document.getElementById('result');
@@ -152,9 +169,9 @@ function logEquation(){ // called on input in forms
   try {
     node = math.parse(expr.value);
     let compiledExpr = node.compile();
-    drawGraphOnce(compiledExpr);
+    drawGraphOnce(compiledExpr, c);
     // result.innerHTML = '';
-    let scope = {x: xVal.value, c: 0};
+    let scope = {x: xVal.value, c: c};
     result.innerHTML = math.format(compiledExpr.eval(scope));
   }
   catch (err) {
@@ -163,7 +180,6 @@ function logEquation(){ // called on input in forms
 
   try {
     let latex = node ? node.toTex({implicit:'show'}) : '';
-    console.log("latex", latex);
     let elem = MathJax.Hub.getAllJax('pretty')[0];
     MathJax.Hub.Queue(['Text', elem, latex]);
   }
@@ -182,3 +198,21 @@ $("#colorpicker").spectrum({
 });
 
 $("#randomColor").change(logEquation);
+
+$( function() {
+  var handle = $( "#custom-handle" );
+  $( "#slider" ).slider({
+    create: function() {
+      handle.text( $( this ).slider( "value" ) );
+    },
+    slide: function( event, ui ) {
+      handle.text( ui.value );
+      let c = parseFloat(ui.value);
+      logEquation(c);
+      document.getElementById('c-value').innerHTML = `c = ${c}`;
+    },
+    min: -10,
+    max: 10,
+    step: 0.1
+  });
+} );

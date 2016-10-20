@@ -36,6 +36,17 @@
 
     <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" charset="utf-8"></script>
 
+    <style>
+      #custom-handle {
+        width: 3em;
+        height: 1.6em;
+        top: 50%;
+        margin-top: -.8em;
+        text-align: center;
+        line-height: 1.6em;
+      }
+    </style>
+
   </head>
   <body>
 
@@ -43,11 +54,23 @@
     <button id="draw-graph" onclick="animateGraphNow()">Draw graph</button>
     <input id='colorpicker' />
     <input type='checkbox' id="randomColor"/> Random
+    <!-- <input type='checkbox' id="hide-graph"/> Hide -->
     <br />
-    <input id="expression" oninput="logEquation()"/>
-    <input id="x-value" oninput="logEquation()" />
-    <div id="result">None Yet</div>
+    expression <input id="expression" oninput="logEquation()"/>
+    sample x <input id="x-value" oninput="logEquation()" />
+    <br />
+    c min<input id="c-min" value="-10"></input>
+    c max<input id="c-max" value="10"></input>
+    c increment<input id="c-increment" value="0.4"></input>
+
+    <div id="c-value"></div>
+    expression value: <span id="result">None Yet</span>
     <div id="pretty">$$$$</div>
+    <br />
+    <div id="slider">
+      <div id="custom-handle" class="ui-slider-handle"></div>
+    </div>
+
     <script src="graph.js" charset="utf-8"></script>
 
   </body>
