@@ -146,3 +146,10 @@ use request animation frame and a t variable to constantly replot while changing
 
 get online through github
 draw polar spiral
+
+refactor into classes
+
+the coordinate plane is an object
+each graph is an object
+
+draw with lines or dots

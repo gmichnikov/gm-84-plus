@@ -1,0 +1,27 @@
+* {
+  padding: 0;
+  margin: 0;
+}
+
+canvas {
+  background: #eee;
+  display: block;
+  margin: 50px auto;
+}
+
+div, input, button {
+  margin-left: 5px;
+}
+
+#slider {
+  width: 400px;
+}
+
+#custom-handle {
+  width: 3em;
+  height: 1.6em;
+  top: 50%;
+  margin-top: -.8em;
+  text-align: center;
+  line-height: 1.6em;
+}

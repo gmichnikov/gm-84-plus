@@ -1,6 +1,7 @@
 var canvas = document.getElementById("myCanvas");
 var ctx = canvas.getContext("2d");
 
+
 function drawAxes() {
   ctx.clearRect(0,0,canvas.width,canvas.height)
   ctx.beginPath();
@@ -216,3 +217,8 @@ $( function() {
     step: 0.1
   });
 } );
+
+
+$('#draw-graph').on("click", animateGraphNow);
+$('#expression').on("input", logEquation);
+$('#x-value').on("input", logEquation);

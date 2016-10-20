@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>GM 84 Plus</title>
+
+    <!-- jquery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+
+    <!-- spectrum -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.0/spectrum.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.0/spectrum.min.css">
+
+    <!-- math.js and mathjax -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/3.5.3/math.min.js" charset="utf-8"></script>
+    <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" charset="utf-8"></script>
+    <!-- <script src="./js/math.min.js" charset="utf-8"></script> -->
+
+    <!-- custom -->
+    <link rel='stylesheet' href='./css/graph.css' />
+
+  </head>
+
+  <body>
+
+    <canvas id="myCanvas" width="700" height="500"></canvas>
+
+
+    <button id="draw-graph">Draw graph</button>
+    <input id='colorpicker' />
+    <input type='checkbox' id="randomColor"/> Random
+    <!-- <input type='checkbox' id="hide-graph"/> Hide -->
+
+    <br />
+
+    expression <input id="expression" />
+    sample x <input id="x-value" />
+
+    <br />
+
+    c min<input id="c-min" value="-10"></input>
+    c max<input id="c-max" value="10"></input>
+    c increment<input id="c-increment" value="0.4"></input>
+
+    <div id="c-value"></div>
+    expression value: <span id="result">None Yet</span>
+
+    <div id="pretty">$$$$</div>
+    <div id="slider">
+      <div id="custom-handle" class="ui-slider-handle"></div>
+    </div>
+
+    <script src="./js/bundle.js" charset="utf-8"></script>
+
+  </body>
+
+
+</html>
