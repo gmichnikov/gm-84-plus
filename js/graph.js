@@ -1,23 +1,11 @@
+import Plane from './plane';
+
 var canvas = document.getElementById("myCanvas");
 var ctx = canvas.getContext("2d");
 
+const plane = new Plane(canvas, ctx);
 
-function drawAxes() {
-  ctx.clearRect(0,0,canvas.width,canvas.height)
-  ctx.beginPath();
-  ctx.rect(canvas.width/2, 0, 1, canvas.height);
-  ctx.rect(0, canvas.height/2, canvas.width, 1);
-  ctx.fillStyle = "#FF0000";
-  ctx.fill();
-  ctx.closePath();
-  ctx.textAlign = "center";
-  ctx.fillStyle = "white";
-  ctx.font = "16px Arial";
-  let textWidth = ctx.measureText('10').width;
-  ctx.fillRect(canvas.width/2 - textWidth/2, 0, textWidth, 20)
-  ctx.fillStyle = "purple";
-  ctx.fillText("10", canvas.width/2, 14);
-}
+
 
 
 // document.addEventListener("mousemove", mouseMoveHandler, false);
@@ -110,7 +98,7 @@ function animateGraph(compiledExpr) {
   let c = cMinVal;
 
   function step() {
-    drawAxes();
+    plane.drawAxes();
     // drawParabola(c)
     // drawSin(c)
 
@@ -132,7 +120,7 @@ function animateGraph(compiledExpr) {
 
 
 function drawGraphOnce(compiledExpr, c = 0) {
-  drawAxes();
+  plane.drawAxes();
   drawAnything(compiledExpr, c);
 }
 

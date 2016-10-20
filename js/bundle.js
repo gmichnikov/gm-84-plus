@@ -42,29 +42,20 @@
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
+	"use strict";
+	
+	var _plane = __webpack_require__(1);
+	
+	var _plane2 = _interopRequireDefault(_plane);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
 	var canvas = document.getElementById("myCanvas");
 	var ctx = canvas.getContext("2d");
 	
-	
-	function drawAxes() {
-	  ctx.clearRect(0,0,canvas.width,canvas.height)
-	  ctx.beginPath();
-	  ctx.rect(canvas.width/2, 0, 1, canvas.height);
-	  ctx.rect(0, canvas.height/2, canvas.width, 1);
-	  ctx.fillStyle = "#FF0000";
-	  ctx.fill();
-	  ctx.closePath();
-	  ctx.textAlign = "center";
-	  ctx.fillStyle = "white";
-	  ctx.font = "16px Arial";
-	  let textWidth = ctx.measureText('10').width;
-	  ctx.fillRect(canvas.width/2 - textWidth/2, 0, textWidth, 20)
-	  ctx.fillStyle = "purple";
-	  ctx.fillText("10", canvas.width/2, 14);
-	}
-	
+	var plane = new _plane2.default(canvas, ctx);
 	
 	// document.addEventListener("mousemove", mouseMoveHandler, false);
 	// function mouseMoveHandler(e) {
@@ -73,35 +64,37 @@
 	// }
 	
 	function calcXCoord(xPixel) {
-	  return (xPixel - canvas.width / 2) / (canvas.width/20);
+	  return (xPixel - canvas.width / 2) / (canvas.width / 20);
 	}
 	
 	function calcYPixel(xCoord, c) {
 	  // x^2 + 2x - 3
-	  let yCoord = Math.pow(xCoord, 2) + 2 * xCoord + c;
+	  var yCoord = Math.pow(xCoord, 2) + 2 * xCoord + c;
 	  // console.log("x", xCoord, "y", yCoord);
-	  return (-canvas.height / 20) * yCoord + (canvas.height / 2)
+	  return -canvas.height / 20 * yCoord + canvas.height / 2;
 	}
 	
 	function calcYPixelSin(xCoord, c) {
-	  let yCoord = c * math.sin(xCoord + c);
-	  return (-canvas.height / 20) * yCoord + (canvas.height / 2)
+	  var yCoord = c * math.sin(xCoord + c);
+	  return -canvas.height / 20 * yCoord + canvas.height / 2;
 	}
 	
 	function rand256() {
-	  return math.randomInt(0,256);
+	  return math.randomInt(0, 256);
 	}
 	
-	function randomColor(opacity = 1) {
-	  return `rgba(${rand256()}, ${rand256()}, ${rand256()}, ${opacity}`;
+	function randomColor() {
+	  var opacity = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
+	
+	  return "rgba(" + rand256() + ", " + rand256() + ", " + rand256() + ", " + opacity;
 	}
 	
 	function drawParabola(c) {
 	  for (var xPixel = 0; xPixel < canvas.width; xPixel++) {
-	    let xCoord = calcXCoord(xPixel);
-	    let yPixel = calcYPixel(xCoord, c);
+	    var xCoord = calcXCoord(xPixel);
+	    var yPixel = calcYPixel(xCoord, c);
 	    ctx.beginPath();
-	    ctx.arc(xPixel, yPixel, 3, 0, Math.PI*2);
+	    ctx.arc(xPixel, yPixel, 3, 0, Math.PI * 2);
 	    ctx.fillStyle = randomColor();
 	    ctx.fill();
 	    ctx.closePath();
@@ -110,10 +103,10 @@
 	
 	function drawSin(c) {
 	  for (var xPixel = 0; xPixel < canvas.width; xPixel++) {
-	    let xCoord = calcXCoord(xPixel);
-	    let yPixel = calcYPixelSin(xCoord, c);
+	    var xCoord = calcXCoord(xPixel);
+	    var yPixel = calcYPixelSin(xCoord, c);
 	    ctx.beginPath();
-	    ctx.arc(xPixel, yPixel, 3, 0, Math.PI*2);
+	    ctx.arc(xPixel, yPixel, 3, 0, Math.PI * 2);
 	    ctx.fillStyle = randomColor();
 	    ctx.fill();
 	    ctx.closePath();
@@ -123,152 +116,190 @@
 	function drawAnything(compiledExpr, c) {
 	
 	  ctx.fillStyle = "black";
-	  let chooseRandom = document.getElementById("randomColor").checked;
-	  let selectedColor = $("#colorpicker").spectrum("get");
+	  var chooseRandom = document.getElementById("randomColor").checked;
+	  var selectedColor = $("#colorpicker").spectrum("get");
 	
 	  for (var xPixel = 0; xPixel < canvas.width; xPixel++) {
-	    let xCoord = calcXCoord(xPixel);
-	    let scope = {x: xCoord, c: c}
+	    var xCoord = calcXCoord(xPixel);
+	    var scope = { x: xCoord, c: c };
 	
 	    try {
-	      let yCoord = math.format(compiledExpr.eval(scope));
-	      let yPixel = (-canvas.height / 20) * yCoord + (canvas.height / 2)
+	      var yCoord = math.format(compiledExpr.eval(scope));
+	      var yPixel = -canvas.height / 20 * yCoord + canvas.height / 2;
 	
 	      ctx.beginPath();
-	      ctx.arc(xPixel, yPixel, 3, 0, Math.PI*2);
+	      ctx.arc(xPixel, yPixel, 3, 0, Math.PI * 2);
 	      ctx.fillStyle = chooseRandom ? randomColor() : selectedColor;
 	      ctx.fill();
 	      ctx.closePath();
-	    }
-	    catch (err) {
-	    }
+	    } catch (err) {}
 	  }
 	}
 	
 	function animateGraph(compiledExpr) {
-	  let cValue = document.getElementById('c-value');
-	  let cMinVal = parseFloat(document.getElementById('c-min').value);
-	  let cMaxVal = parseFloat(document.getElementById('c-max').value);
-	  let cIncrementVal = parseFloat(document.getElementById('c-increment').value);
+	  var cValue = document.getElementById('c-value');
+	  var cMinVal = parseFloat(document.getElementById('c-min').value);
+	  var cMaxVal = parseFloat(document.getElementById('c-max').value);
+	  var cIncrementVal = parseFloat(document.getElementById('c-increment').value);
 	
 	  console.log(cMinVal, cMaxVal, cIncrementVal);
 	
-	  let c = cMinVal;
+	  var c = cMinVal;
 	
 	  function step() {
-	    drawAxes();
+	    plane.drawAxes();
 	    // drawParabola(c)
 	    // drawSin(c)
 	
 	    drawAnything(compiledExpr, c);
-	    cValue.innerHTML = `c = ${c}`;
-	    $( "#slider" ).slider( "value", c );
-	    $( "#custom-handle" ).text(c);
+	    cValue.innerHTML = "c = " + c;
+	    $("#slider").slider("value", c);
+	    $("#custom-handle").text(c);
 	
 	    c = math.round(c + cIncrementVal, 2);
 	    if (c <= cMaxVal) {
 	      window.requestAnimationFrame(step);
 	    } else {
-	      let drawButton = document.getElementById('draw-graph');
+	      var drawButton = document.getElementById('draw-graph');
 	      drawButton.disabled = false;
 	    }
 	  }
 	  window.requestAnimationFrame(step);
 	}
 	
+	function drawGraphOnce(compiledExpr) {
+	  var c = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
 	
-	function drawGraphOnce(compiledExpr, c = 0) {
-	  drawAxes();
+	  plane.drawAxes();
 	  drawAnything(compiledExpr, c);
 	}
 	
 	function animateGraphNow() {
-	  let colorpicker = document.getElementById('colorpicker');
+	  var colorpicker = document.getElementById('colorpicker');
 	
-	  let drawButton = document.getElementById('draw-graph');
+	  var drawButton = document.getElementById('draw-graph');
 	  drawButton.disabled = true;
 	
-	  let expr = document.getElementById('expression');
+	  var expr = document.getElementById('expression');
 	
 	  try {
-	    let node = math.parse(expr.value);
-	    let compiledExpr = node.compile();
+	    var node = math.parse(expr.value);
+	    var compiledExpr = node.compile();
 	    animateGraph(compiledExpr);
-	  }
-	  catch (err) {
-	  }
+	  } catch (err) {}
 	}
 	
-	
-	function logEquation(c){ // called on input in forms
-	  if (typeof(c) !== "number") {
+	function logEquation(c) {
+	  // called on input in forms
+	  if (typeof c !== "number") {
 	    c = 0;
 	  }
 	  console.log("C", c);
 	
-	  let expr = document.getElementById('expression');
-	  let xVal = document.getElementById('x-value');
-	  let result = document.getElementById('result');
-	  let pretty = document.getElementById('pretty');
+	  var expr = document.getElementById('expression');
+	  var xVal = document.getElementById('x-value');
+	  var result = document.getElementById('result');
+	  var pretty = document.getElementById('pretty');
 	
-	  let node = null;
+	  var node = null;
 	
 	  try {
 	    node = math.parse(expr.value);
-	    let compiledExpr = node.compile();
+	    var compiledExpr = node.compile();
 	    drawGraphOnce(compiledExpr, c);
 	    // result.innerHTML = '';
-	    let scope = {x: xVal.value, c: c};
+	    var scope = { x: xVal.value, c: c };
 	    result.innerHTML = math.format(compiledExpr.eval(scope));
-	  }
-	  catch (err) {
+	  } catch (err) {
 	    result.innerHTML = '<span style="color: red;">' + err.toString() + '</span>';
 	  }
 	
 	  try {
-	    let latex = node ? node.toTex({implicit:'show'}) : '';
-	    let elem = MathJax.Hub.getAllJax('pretty')[0];
+	    var latex = node ? node.toTex({ implicit: 'show' }) : '';
+	    var elem = MathJax.Hub.getAllJax('pretty')[0];
 	    MathJax.Hub.Queue(['Text', elem, latex]);
-	  }
-	  catch (err) {
-	  }
+	  } catch (err) {}
 	}
-	
 	
 	$("#colorpicker").spectrum({
 	  showPaletteOnly: true,
-	  showPalette:true,
-	  hideAfterPaletteSelect:true,
+	  showPalette: true,
+	  hideAfterPaletteSelect: true,
 	  color: 'black',
 	  palette: ['black', 'red', 'orange', 'yellow', 'green', 'blue', 'violet'],
-	  change: logEquation,
+	  change: logEquation
 	});
 	
 	$("#randomColor").change(logEquation);
 	
-	$( function() {
-	  var handle = $( "#custom-handle" );
-	  $( "#slider" ).slider({
-	    create: function() {
-	      handle.text( $( this ).slider( "value" ) );
+	$(function () {
+	  var handle = $("#custom-handle");
+	  $("#slider").slider({
+	    create: function create() {
+	      handle.text($(this).slider("value"));
 	    },
-	    slide: function( event, ui ) {
-	      handle.text( ui.value );
-	      let c = parseFloat(ui.value);
+	    slide: function slide(event, ui) {
+	      handle.text(ui.value);
+	      var c = parseFloat(ui.value);
 	      logEquation(c);
-	      document.getElementById('c-value').innerHTML = `c = ${c}`;
+	      document.getElementById('c-value').innerHTML = "c = " + c;
 	    },
 	    min: -10,
 	    max: 10,
 	    step: 0.1
 	  });
-	} );
-	
+	});
 	
 	$('#draw-graph').on("click", animateGraphNow);
 	$('#expression').on("input", logEquation);
 	$('#x-value').on("input", logEquation);
 
+/***/ },
+/* 1 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var Plane = function () {
+	  function Plane(canvas, ctx) {
+	    _classCallCheck(this, Plane);
+	
+	    this.ctx = ctx;
+	    this.canvas = canvas;
+	  }
+	
+	  _createClass(Plane, [{
+	    key: "drawAxes",
+	    value: function drawAxes() {
+	      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+	      this.ctx.beginPath();
+	      this.ctx.rect(this.canvas.width / 2, 0, 1, this.canvas.height);
+	      this.ctx.rect(0, this.canvas.height / 2, this.canvas.width, 1);
+	      this.ctx.fillStyle = "#FF0000";
+	      this.ctx.fill();
+	      this.ctx.closePath();
+	      this.ctx.textAlign = "center";
+	      this.ctx.fillStyle = "white";
+	      this.ctx.font = "16px Arial";
+	      var textWidth = this.ctx.measureText('10').width;
+	      this.ctx.fillRect(this.canvas.width / 2 - textWidth / 2, 0, textWidth, 20);
+	      this.ctx.fillStyle = "purple";
+	      this.ctx.fillText("10", this.canvas.width / 2, 14);
+	    }
+	  }]);
+	
+	  return Plane;
+	}();
+	
+	exports.default = Plane;
 
 /***/ }
 /******/ ]);
