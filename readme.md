@@ -48,6 +48,7 @@ In addition to the webpack entry file, there will be three scripts involved in t
 
 ### Implementation Timeline
 
+
 **Day 1**: Download, install, and learn the basics of `Mathquill` and `Math.js`. Create `webpack.config.js` and get webpack up and running. Goals for the day:
 
 - Get a green bundle with `webpack`
@@ -62,16 +63,13 @@ In addition to the webpack entry file, there will be three scripts involved in t
 - Be able to toggle animated drawing on and off
 - Be able to click on Trace mode, which then shows x/y values while moving mouse around
 
-- [ ] For a list of pre-selected graphs, provide sliders on various coefficients so that users can see how changes to those coefficients affect the graphs (e.g. lines, quadratics, trig)
-- [ ] Find the point(s) of intersection of two selected graphs
-- [ ] Find the point(s) where a graph cross the x-axis
-
 
 **Day 3**: Add pre-selected graphs and make it easy to load them in, along with the associated sliders. Add logic to calculate solutions and intersections of two graphs. Goals for the day:
 
 - Include y = mx + b with sliders for m, b
 - Include y = ax^2 + bx + c with sliders for a, b, and c
 - Include y = Asin(b(x + c)) with sliders for a, b, and c
+
 
 **Day 4**: Finish anything that is not complete, and implement bonus features.
 
