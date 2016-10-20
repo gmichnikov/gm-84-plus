@@ -2,7 +2,7 @@ import Equation from './equation.js';
 import * as UTIL from './util';
 
 class Plane {
-  constructor(ctx, xMin = -5, xMax = 15, yMin = -10, yMax = 20) {
+  constructor(ctx, xMin = -10, xMax = 10, yMin = -10, yMax = 10) {
     this.ctx = ctx;
     this.canvas = ctx.canvas;
 
@@ -10,12 +10,40 @@ class Plane {
     this.xMax = xMax;
     this.yMin = yMin;
     this.yMax = yMax;
+    this.updateAxisLocations();
+    this.bindEvents();
+
+    this.equation = new Equation(this);
+  }
+
+  bindEvents() {
+    $('.window-values').on("input", () => this.updateWindow());
+    $('#reset-window-standard').on("click", () => this.resetWindow(-10, 10, -10, 10));
+    $('#reset-window-square').on("click", () => this.resetWindow(-15, 15, -10, 10));
+  }
+
+  updateAxisLocations() {
     this.yAxisPercentOver = -this.xMin / (this.xMax - this.xMin);
     this.yAxisPixelsOver = this.yAxisPercentOver * this.canvas.width;
     this.xAxisPercentDown = 1 - (-this.yMin / (this.yMax - this.yMin));
     this.xAxisPixelsDown = this.xAxisPercentDown * this.canvas.height;
+  }
 
-    this.equation = new Equation(this);
+  updateWindow() {
+    this.xMin = parseFloat(document.getElementById('window-x-min').value);
+    this.xMax = parseFloat(document.getElementById('window-x-max').value);
+    this.yMin = parseFloat(document.getElementById('window-y-min').value);
+    this.yMax = parseFloat(document.getElementById('window-y-max').value);
+    this.updateAxisLocations();
+    this.equation.logEquation();
+  }
+
+  resetWindow(xMin, xMax, yMin, yMax) {
+    document.getElementById('window-x-min').value = xMin;
+    document.getElementById('window-x-max').value = xMax;
+    document.getElementById('window-y-min').value = yMin;
+    document.getElementById('window-y-max').value = yMax;
+    this.updateWindow();
   }
 
   drawAxes() {

@@ -25,7 +25,7 @@
 
   <body>
 
-    <canvas id="myCanvas" width="700" height="500"></canvas>
+    <canvas id="myCanvas" width="600" height="400"></canvas>
 
 
     <button id="draw-graph">Animate graph</button>
@@ -46,6 +46,15 @@
 
     <div id="c-value"></div>
     expression value: <span id="result">None Yet</span>
+
+    <br>
+    x min<input class="window-values" id="window-x-min" value="-10"></input>
+    x max<input class="window-values" id="window-x-max" value="10"></input>
+    y min<input class="window-values" id="window-y-min" value="-10"></input>
+    y max<input class="window-values" id="window-y-max" value="10"></input>
+    <button id="reset-window-standard">Standard</button>
+    <button id="reset-window-square">Square</button>
+
 
     <div id="pretty">$$$$</div>
     <div id="slider">

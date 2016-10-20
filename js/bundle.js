@@ -98,10 +98,10 @@
 	
 	var Plane = function () {
 	  function Plane(ctx) {
-	    var xMin = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : -5;
-	    var xMax = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 15;
+	    var xMin = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : -10;
+	    var xMax = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 10;
 	    var yMin = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : -10;
-	    var yMax = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 20;
+	    var yMax = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 10;
 	
 	    _classCallCheck(this, Plane);
 	
@@ -112,15 +112,55 @@
 	    this.xMax = xMax;
 	    this.yMin = yMin;
 	    this.yMax = yMax;
-	    this.yAxisPercentOver = -this.xMin / (this.xMax - this.xMin);
-	    this.yAxisPixelsOver = this.yAxisPercentOver * this.canvas.width;
-	    this.xAxisPercentDown = 1 - -this.yMin / (this.yMax - this.yMin);
-	    this.xAxisPixelsDown = this.xAxisPercentDown * this.canvas.height;
+	    this.updateAxisLocations();
+	    this.bindEvents();
 	
 	    this.equation = new _equation2.default(this);
 	  }
 	
 	  _createClass(Plane, [{
+	    key: 'bindEvents',
+	    value: function bindEvents() {
+	      var _this = this;
+	
+	      $('.window-values').on("input", function () {
+	        return _this.updateWindow();
+	      });
+	      $('#reset-window-standard').on("click", function () {
+	        return _this.resetWindow(-10, 10, -10, 10);
+	      });
+	      $('#reset-window-square').on("click", function () {
+	        return _this.resetWindow(-15, 15, -10, 10);
+	      });
+	    }
+	  }, {
+	    key: 'updateAxisLocations',
+	    value: function updateAxisLocations() {
+	      this.yAxisPercentOver = -this.xMin / (this.xMax - this.xMin);
+	      this.yAxisPixelsOver = this.yAxisPercentOver * this.canvas.width;
+	      this.xAxisPercentDown = 1 - -this.yMin / (this.yMax - this.yMin);
+	      this.xAxisPixelsDown = this.xAxisPercentDown * this.canvas.height;
+	    }
+	  }, {
+	    key: 'updateWindow',
+	    value: function updateWindow() {
+	      this.xMin = parseFloat(document.getElementById('window-x-min').value);
+	      this.xMax = parseFloat(document.getElementById('window-x-max').value);
+	      this.yMin = parseFloat(document.getElementById('window-y-min').value);
+	      this.yMax = parseFloat(document.getElementById('window-y-max').value);
+	      this.updateAxisLocations();
+	      this.equation.logEquation();
+	    }
+	  }, {
+	    key: 'resetWindow',
+	    value: function resetWindow(xMin, xMax, yMin, yMax) {
+	      document.getElementById('window-x-min').value = xMin;
+	      document.getElementById('window-x-max').value = xMax;
+	      document.getElementById('window-y-min').value = yMin;
+	      document.getElementById('window-y-max').value = yMax;
+	      this.updateWindow();
+	    }
+	  }, {
 	    key: 'drawAxes',
 	    value: function drawAxes() {
 	      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
