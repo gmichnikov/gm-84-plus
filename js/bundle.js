@@ -112,6 +112,7 @@
 	    this.xMax = xMax;
 	    this.yMin = yMin;
 	    this.yMax = yMax;
+	    this.zoomFactor = 1.1;
 	    this.updateAxisLocations();
 	    this.bindEvents();
 	
@@ -123,6 +124,7 @@
 	    value: function bindEvents() {
 	      var _this = this;
 	
+	      var that = this;
 	      $('.window-values').on("input", function () {
 	        return _this.updateWindow();
 	      });
@@ -132,6 +134,27 @@
 	      $('#reset-window-square').on("click", function () {
 	        return _this.resetWindow(-15, 15, -10, 10);
 	      });
+	      $(window).bind('mousewheel', function (e) {
+	        if (e.originalEvent.wheelDelta / 120 > 0) {
+	          that.zoom("in");
+	        } else {
+	          that.zoom("out");
+	        }
+	      });
+	    }
+	  }, {
+	    key: 'zoom',
+	    value: function zoom(direction) {
+	      var multiplier = direction === "in" ? 1 / this.zoomFactor : this.zoomFactor;
+	
+	      var centerX = (this.xMax + this.xMin) / 2;
+	      this.xMax = (this.xMax - centerX) * multiplier + centerX;
+	      this.xMin = centerX - (centerX - this.xMin) * multiplier;
+	
+	      var centerY = (this.yMax + this.yMin) / 2;
+	      this.yMax = (this.yMax - centerY) * multiplier + centerY;
+	      this.yMin = centerY - (centerY - this.yMin) * multiplier;
+	      this.resetWindow(this.xMin, this.xMax, this.yMin, this.yMax);
 	    }
 	  }, {
 	    key: 'updateAxisLocations',
