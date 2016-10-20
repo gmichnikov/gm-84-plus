@@ -5,6 +5,7 @@ class Equation {
   constructor(plane) {
     this.plane = plane;
     this.setup();
+    this.logEquation(0);
     // this.drawGraphOnce = this.drawGraphOnce.bind(this);
     // this.logEquation = this.logEquation.bind(this);
   }
@@ -15,8 +16,8 @@ class Equation {
       showPalette:true,
       hideAfterPaletteSelect:true,
       color: 'black',
-      palette: ['black', 'red', 'orange', 'yellow', 'green', 'blue', 'violet'],
-      change: this.logEquation,
+      palette: ['black', 'red', 'orange', 'yellow', 'green', 'blue', 'violet', UTIL.randomColor()],
+      change: () => this.logEquation(),
     });
 
     let that = this;
@@ -148,14 +149,15 @@ class Equation {
     ctx.fillStyle = "black";
     let chooseRandom = document.getElementById("randomColor").checked;
     let selectedColor = $("#colorpicker").spectrum("get");
+    let that = this;
 
     for (var xPixel = 0; xPixel < canvas.width; xPixel++) {
-      let xCoord = UTIL.calcXCoord(xPixel, canvas);
+      let xCoord = UTIL.calcXCoord(xPixel, canvas, that.plane);
       let scope = {x: xCoord, c: c}
 
       try {
         let yCoord = math.format(compiledExpr.eval(scope));
-        let yPixel = UTIL.calcYPixel(yCoord, canvas);
+        let yPixel = UTIL.calcYPixel(yCoord, canvas, that.plane);
 
         ctx.beginPath();
         ctx.arc(xPixel, yPixel, 3, 0, Math.PI*2);

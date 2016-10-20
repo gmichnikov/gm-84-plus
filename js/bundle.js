@@ -62,12 +62,12 @@
 	var ctx = canvas.getContext("2d");
 	
 	var plane = new _plane2.default(ctx);
-	plane.drawAxes();
+	// plane.drawAxes();
+	
 	
 	// document.addEventListener("mousemove", mouseMoveHandler, false);
 	// function mouseMoveHandler(e) {
 	//     let relativeX = e.clientX - canvas.offsetLeft;
-	//     // console.log(math.round(calcXCoord(relativeX), 1));
 	// }
 
 /***/ },
@@ -98,15 +98,25 @@
 	
 	var Plane = function () {
 	  function Plane(ctx) {
-	    var xMin = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : -10;
-	    var xMax = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 10;
+	    var xMin = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : -5;
+	    var xMax = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 15;
 	    var yMin = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : -10;
-	    var yMax = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 10;
+	    var yMax = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 20;
 	
 	    _classCallCheck(this, Plane);
 	
 	    this.ctx = ctx;
 	    this.canvas = ctx.canvas;
+	
+	    this.xMin = xMin;
+	    this.xMax = xMax;
+	    this.yMin = yMin;
+	    this.yMax = yMax;
+	    this.yAxisPercentOver = -this.xMin / (this.xMax - this.xMin);
+	    this.yAxisPixelsOver = this.yAxisPercentOver * this.canvas.width;
+	    this.xAxisPercentDown = 1 - -this.yMin / (this.yMax - this.yMin);
+	    this.xAxisPixelsDown = this.xAxisPercentDown * this.canvas.height;
+	
 	    this.equation = new _equation2.default(this);
 	  }
 	
@@ -115,18 +125,29 @@
 	    value: function drawAxes() {
 	      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 	      this.ctx.beginPath();
-	      this.ctx.rect(this.canvas.width / 2, 0, 1, this.canvas.height);
-	      this.ctx.rect(0, this.canvas.height / 2, this.canvas.width, 1);
+	      this.ctx.rect(0, this.xAxisPixelsDown, this.canvas.width, 1); // x axis
+	      this.ctx.rect(this.yAxisPixelsOver, 0, 1, this.canvas.height); // y axis
 	      this.ctx.fillStyle = "#FF0000";
 	      this.ctx.fill();
 	      this.ctx.closePath();
+	      this.drawAxisLabels();
+	    }
+	  }, {
+	    key: 'drawAxisLabels',
+	    value: function drawAxisLabels() {
+	      var yMaxLabelHeight = 14;
+	      var estFontHeight = 20;
 	      this.ctx.textAlign = "center";
-	      this.ctx.fillStyle = "white";
 	      this.ctx.font = "16px Arial";
-	      var textWidth = this.ctx.measureText('10').width;
-	      this.ctx.fillRect(this.canvas.width / 2 - textWidth / 2, 0, textWidth, 20);
+	
+	      var xMinTextWidth = this.ctx.measureText(this.xMin).width;
+	      var xMaxTextWidth = this.ctx.measureText(this.xMax).width;
+	      var yMinTextWidth = this.ctx.measureText(this.yMin).width;
+	      var yMaxTextWidth = this.ctx.measureText(this.yMax).width;
 	      this.ctx.fillStyle = "purple";
-	      this.ctx.fillText("10", this.canvas.width / 2, 14);
+	      this.ctx.fillRect(this.yAxisPixelsOver - yMaxTextWidth / 2, 0, yMaxTextWidth, estFontHeight);
+	      this.ctx.fillStyle = "white";
+	      this.ctx.fillText(this.yMax, this.yAxisPixelsOver, yMaxLabelHeight);
 	    }
 	  }]);
 	
@@ -162,6 +183,7 @@
 	
 	    this.plane = plane;
 	    this.setup();
+	    this.logEquation(0);
 	    // this.drawGraphOnce = this.drawGraphOnce.bind(this);
 	    // this.logEquation = this.logEquation.bind(this);
 	  }
@@ -176,8 +198,10 @@
 	        showPalette: true,
 	        hideAfterPaletteSelect: true,
 	        color: 'black',
-	        palette: ['black', 'red', 'orange', 'yellow', 'green', 'blue', 'violet'],
-	        change: this.logEquation
+	        palette: ['black', 'red', 'orange', 'yellow', 'green', 'blue', 'violet', UTIL.randomColor()],
+	        change: function change() {
+	          return _this.logEquation();
+	        }
 	      });
 	
 	      var that = this;
@@ -320,14 +344,15 @@
 	      ctx.fillStyle = "black";
 	      var chooseRandom = document.getElementById("randomColor").checked;
 	      var selectedColor = $("#colorpicker").spectrum("get");
+	      var that = this;
 	
 	      for (var xPixel = 0; xPixel < canvas.width; xPixel++) {
-	        var xCoord = UTIL.calcXCoord(xPixel, canvas);
+	        var xCoord = UTIL.calcXCoord(xPixel, canvas, that.plane);
 	        var scope = { x: xCoord, c: c };
 	
 	        try {
 	          var yCoord = math.format(compiledExpr.eval(scope));
-	          var yPixel = UTIL.calcYPixel(yCoord, canvas);
+	          var yPixel = UTIL.calcYPixel(yCoord, canvas, that.plane);
 	
 	          ctx.beginPath();
 	          ctx.arc(xPixel, yPixel, 3, 0, Math.PI * 2);
@@ -363,12 +388,12 @@
 	  return "rgba(" + rand256() + ", " + rand256() + ", " + rand256() + ", " + opacity;
 	};
 	
-	var calcXCoord = exports.calcXCoord = function calcXCoord(xPixel, canvas) {
-	  return (xPixel - canvas.width / 2) / (canvas.width / 20);
+	var calcXCoord = exports.calcXCoord = function calcXCoord(xPixel, canvas, plane) {
+	  return (xPixel - canvas.width / 2) / (canvas.width / (plane.xMax - plane.xMin));
 	};
 	
-	var calcYPixel = exports.calcYPixel = function calcYPixel(yCoord, canvas) {
-	  return -canvas.height / 20 * yCoord + canvas.height / 2;
+	var calcYPixel = exports.calcYPixel = function calcYPixel(yCoord, canvas, plane) {
+	  return -canvas.height / (plane.yMax - plane.yMin) * yCoord + canvas.height / 2;
 	};
 
 /***/ }

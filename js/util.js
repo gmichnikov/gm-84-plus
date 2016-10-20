@@ -7,10 +7,10 @@ export const randomColor = (opacity = 1) => {
 };
 
 
-export const calcXCoord = (xPixel, canvas) => {
-  return (xPixel - canvas.width / 2) / (canvas.width/20);
+export const calcXCoord = (xPixel, canvas, plane) => {
+  return (xPixel - canvas.width / 2) / (canvas.width/ (plane.xMax - plane.xMin) );
 }
 
-export const calcYPixel = (yCoord, canvas) => {
-  return (-canvas.height / 20) * yCoord + (canvas.height / 2);
+export const calcYPixel = (yCoord, canvas, plane) => {
+  return (-canvas.height / (plane.yMax - plane.yMin) ) * yCoord + (canvas.height / 2);
 }
