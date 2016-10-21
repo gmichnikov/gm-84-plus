@@ -10,10 +10,12 @@ class Plane {
     this.xMax = xMax;
     this.yMin = yMin;
     this.yMax = yMax;
-    this.zoomFactor = 1.15;
+    this.zoomFactor = 2;
 
     this.mouseXPixel = this.canvas.width/2;
     this.mouseYPixel = this.canvas.height/2;
+    this.mouseX = 0;
+    this.mouseY = 0;
 
     this.updateAxisLocations();
     this.bindEvents();
@@ -39,6 +41,10 @@ class Plane {
     function mouseMoveHandler(e) {
       that.mouseXPixel = e.clientX - that.canvas.offsetLeft;
       that.mouseYPixel = e.clientY - that.canvas.offsetTop;
+      that.mouseX = UTIL.calcXCoord(that.mouseXPixel, that.canvas, that);
+      that.mouseY = UTIL.calcYCoord(that.mouseYPixel, that.canvas, that);
+      console.log(that.mouseXPixel, that.mouseYPixel);
+      console.log(that.mouseX, that.mouseY);
     }
   }
 
@@ -50,13 +56,17 @@ class Plane {
     if(this.mouseInBounds()) {
       let multiplier = (direction === "in" ? 1/this.zoomFactor : this.zoomFactor);
 
-      let centerX = (this.xMax + this.xMin) / 2;
-      this.xMax = (this.xMax - centerX) * multiplier + centerX;
-      this.xMin = centerX - (centerX - this.xMin) * multiplier;
+      console.log(this.mouseX, this.mouseY);
+      // let dilationX = (this.xMax + this.xMin) / 2;
+      let dilationX = this.mouseX;
+      this.xMax = (this.xMax - dilationX) * multiplier + dilationX;
+      this.xMin = dilationX - (dilationX - this.xMin) * multiplier;
 
-      let centerY = (this.yMax + this.yMin) / 2;
-      this.yMax = (this.yMax - centerY) * multiplier + centerY;
-      this.yMin = centerY - (centerY - this.yMin) * multiplier;
+      // let dilationY = (this.yMax + this.yMin) / 2;
+      let dilationY = this.mouseY;
+      this.yMax = (this.yMax - dilationY) * multiplier + dilationY;
+      this.yMin = dilationY - (dilationY - this.yMin) * multiplier;
+
       this.resetWindow(this.xMin, this.xMax, this.yMin, this.yMax);
     }
   }

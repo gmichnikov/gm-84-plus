@@ -8,9 +8,21 @@ export const randomColor = (opacity = 1) => {
 
 
 export const calcXCoord = (xPixel, canvas, plane) => {
-  return (xPixel - canvas.width / 2) / (canvas.width/ (plane.xMax - plane.xMin) );
+
+  return xPixel/canvas.width * (plane.xMax - plane.xMin) + plane.xMin;
 }
 
-export const calcYPixel = (yCoord, canvas, plane) => {
-  return (-canvas.height / (plane.yMax - plane.yMin) ) * yCoord + (canvas.height / 2);
+export const calcYCoord = (yPixel, canvas, plane) => {
+  let pixelFromBottom = canvas.height - yPixel;
+
+  return pixelFromBottom/canvas.height * (plane.yMax - plane.yMin) + plane.yMin;
 }
+
+
+export const calcYPixel = (yCoord, canvas, plane) => {
+
+  return ((plane.yMax - yCoord) / (plane.yMax - plane.yMin)) * canvas.height;
+}
+
+
+// 330 240

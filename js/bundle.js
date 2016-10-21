@@ -106,10 +106,12 @@
 	    this.xMax = xMax;
 	    this.yMin = yMin;
 	    this.yMax = yMax;
-	    this.zoomFactor = 1.15;
+	    this.zoomFactor = 2;
 	
 	    this.mouseXPixel = this.canvas.width / 2;
 	    this.mouseYPixel = this.canvas.height / 2;
+	    this.mouseX = 0;
+	    this.mouseY = 0;
 	
 	    this.updateAxisLocations();
 	    this.bindEvents();
@@ -144,6 +146,10 @@
 	      function mouseMoveHandler(e) {
 	        that.mouseXPixel = e.clientX - that.canvas.offsetLeft;
 	        that.mouseYPixel = e.clientY - that.canvas.offsetTop;
+	        that.mouseX = UTIL.calcXCoord(that.mouseXPixel, that.canvas, that);
+	        that.mouseY = UTIL.calcYCoord(that.mouseYPixel, that.canvas, that);
+	        console.log(that.mouseXPixel, that.mouseYPixel);
+	        console.log(that.mouseX, that.mouseY);
 	      }
 	    }
 	  }, {
@@ -157,13 +163,17 @@
 	      if (this.mouseInBounds()) {
 	        var multiplier = direction === "in" ? 1 / this.zoomFactor : this.zoomFactor;
 	
-	        var centerX = (this.xMax + this.xMin) / 2;
-	        this.xMax = (this.xMax - centerX) * multiplier + centerX;
-	        this.xMin = centerX - (centerX - this.xMin) * multiplier;
+	        console.log(this.mouseX, this.mouseY);
+	        // let dilationX = (this.xMax + this.xMin) / 2;
+	        var dilationX = this.mouseX;
+	        this.xMax = (this.xMax - dilationX) * multiplier + dilationX;
+	        this.xMin = dilationX - (dilationX - this.xMin) * multiplier;
 	
-	        var centerY = (this.yMax + this.yMin) / 2;
-	        this.yMax = (this.yMax - centerY) * multiplier + centerY;
-	        this.yMin = centerY - (centerY - this.yMin) * multiplier;
+	        // let dilationY = (this.yMax + this.yMin) / 2;
+	        var dilationY = this.mouseY;
+	        this.yMax = (this.yMax - dilationY) * multiplier + dilationY;
+	        this.yMin = dilationY - (dilationY - this.yMin) * multiplier;
+	
 	        this.resetWindow(this.xMin, this.xMax, this.yMin, this.yMax);
 	      }
 	    }
@@ -329,6 +339,7 @@
 	
 	      this.plane.drawAxes();
 	      this.drawAnything(compiledExpr, c);
+	      console.log(this.plane.mouseX, this.plane.mouseY);
 	    }
 	  }, {
 	    key: 'adjustSliderBounds',
@@ -397,8 +408,6 @@
 	      var cMaxVal = parseFloat(document.getElementById('c-max').value);
 	      var cIncrementVal = parseFloat(document.getElementById('c-increment').value);
 	
-	      console.log(cMinVal, cMaxVal, cIncrementVal);
-	
 	      var c = cMinVal;
 	
 	      function step() {
@@ -437,7 +446,8 @@
 	
 	        try {
 	          var yCoord = math.format(compiledExpr.eval(scope));
-	          var yPixel = UTIL.calcYPixel(yCoord, canvas, that.plane);
+	
+	          var yPixel = UTIL.calcYPixel(parseFloat(yCoord), canvas, that.plane);
 	
 	          ctx.beginPath();
 	          ctx.arc(xPixel, yPixel, 3, 0, Math.PI * 2);
@@ -474,12 +484,22 @@
 	};
 	
 	var calcXCoord = exports.calcXCoord = function calcXCoord(xPixel, canvas, plane) {
-	  return (xPixel - canvas.width / 2) / (canvas.width / (plane.xMax - plane.xMin));
+	
+	  return xPixel / canvas.width * (plane.xMax - plane.xMin) + plane.xMin;
+	};
+	
+	var calcYCoord = exports.calcYCoord = function calcYCoord(yPixel, canvas, plane) {
+	  var pixelFromBottom = canvas.height - yPixel;
+	
+	  return pixelFromBottom / canvas.height * (plane.yMax - plane.yMin) + plane.yMin;
 	};
 	
 	var calcYPixel = exports.calcYPixel = function calcYPixel(yCoord, canvas, plane) {
-	  return -canvas.height / (plane.yMax - plane.yMin) * yCoord + canvas.height / 2;
+	
+	  return (plane.yMax - yCoord) / (plane.yMax - plane.yMin) * canvas.height;
 	};
+	
+	// 330 240
 
 /***/ }
 /******/ ]);

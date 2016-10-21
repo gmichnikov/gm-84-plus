@@ -49,6 +49,7 @@ class Equation {
   drawGraphOnce(compiledExpr, c = 0) {
     this.plane.drawAxes();
     this.drawAnything(compiledExpr, c);
+    console.log(this.plane.mouseX, this.plane.mouseY);
   }
 
   adjustSliderBounds() {
@@ -118,8 +119,6 @@ class Equation {
     let cMaxVal = parseFloat(document.getElementById('c-max').value);
     let cIncrementVal = parseFloat(document.getElementById('c-increment').value);
 
-    console.log(cMinVal, cMaxVal, cIncrementVal);
-
     let c = cMinVal;
 
     function step() {
@@ -157,7 +156,8 @@ class Equation {
 
       try {
         let yCoord = math.format(compiledExpr.eval(scope));
-        let yPixel = UTIL.calcYPixel(yCoord, canvas, that.plane);
+
+        let yPixel = UTIL.calcYPixel(parseFloat(yCoord), canvas, that.plane);
 
         ctx.beginPath();
         ctx.arc(xPixel, yPixel, 3, 0, Math.PI*2);
