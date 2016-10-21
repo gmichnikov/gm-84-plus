@@ -106,7 +106,8 @@
 	    this.xMax = xMax;
 	    this.yMin = yMin;
 	    this.yMax = yMax;
-	    this.zoomFactor = 2;
+	    this.zoomFactor = 1.15;
+	    this.panFactor = 0.1;
 	
 	    this.mouseXPixel = this.canvas.width / 2;
 	    this.mouseYPixel = this.canvas.height / 2;
@@ -137,7 +138,25 @@
 	        return _this.resetWindow(-10, 10, -10, 10);
 	      });
 	      $('#reset-window-square').on("click", function () {
-	        return _this.resetWindow(-15, 15, -10, 10);
+	        return _this.resetWindow(-16, 16, -10, 10);
+	      });
+	      $('#zoom-in').on("click", function () {
+	        return _this.zoom("in", true);
+	      });
+	      $('#zoom-out').on("click", function () {
+	        return _this.zoom("out", true);
+	      });
+	      $('#pan-left').on("click", function () {
+	        return _this.pan("left");
+	      });
+	      $('#pan-right').on("click", function () {
+	        return _this.pan("right");
+	      });
+	      $('#pan-up').on("click", function () {
+	        return _this.pan("up");
+	      });
+	      $('#pan-down').on("click", function () {
+	        return _this.pan("down");
 	      });
 	      $(window).bind('mousewheel', function (e) {
 	        if (e.originalEvent.wheelDelta / 120 > 0) {
@@ -155,7 +174,8 @@
 	
 	      document.addEventListener("mousemove", mouseMoveHandler, false);
 	      function mouseMoveHandler(e) {
-	        that.mouseXPixel = e.clientX - that.canvas.offsetLeft;
+	        // console.log(that.canvas.offsetLeft, that.canvas.offsetTop);
+	        that.mouseXPixel = e.clientX - (that.canvas.offsetLeft + $('.container')[0].offsetLeft);
 	        that.mouseYPixel = e.clientY - that.canvas.offsetTop;
 	        that.mouseX = UTIL.calcXCoord(that.mouseXPixel, that.canvas, that);
 	        that.mouseY = UTIL.calcYCoord(that.mouseYPixel, that.canvas, that);
@@ -233,24 +253,44 @@
 	  }, {
 	    key: 'mouseInBounds',
 	    value: function mouseInBounds() {
+	      // console.log(this.mouseXPixel, this.mouseYPixel);
 	      return this.mouseXPixel > 0 && this.mouseXPixel < this.canvas.width && this.mouseYPixel > 0 && this.mouseYPixel < this.canvas.height;
 	    }
 	  }, {
 	    key: 'zoom',
 	    value: function zoom(direction) {
-	      if (this.mouseInBounds()) {
+	      var button = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+	
+	      if (this.mouseInBounds() || button) {
 	        var multiplier = direction === "in" ? 1 / this.zoomFactor : this.zoomFactor;
 	
-	        var dilationX = this.mouseX;
+	        var centerX = (this.xMax + this.xMin) / 2;
+	        var dilationX = button ? centerX : this.mouseX;
 	        this.xMax = (this.xMax - dilationX) * multiplier + dilationX;
 	        this.xMin = dilationX - (dilationX - this.xMin) * multiplier;
 	
-	        var dilationY = this.mouseY;
+	        var centerY = (this.yMax + this.yMin) / 2;
+	        var dilationY = button ? centerY : this.mouseY;
 	        this.yMax = (this.yMax - dilationY) * multiplier + dilationY;
 	        this.yMin = dilationY - (dilationY - this.yMin) * multiplier;
 	
 	        this.resetWindow(this.xMin, this.xMax, this.yMin, this.yMax);
 	      }
+	    }
+	  }, {
+	    key: 'pan',
+	    value: function pan(direction) {
+	      var xAdjust = (this.xMax - this.xMin) * this.panFactor;
+	      var yAdjust = (this.yMax - this.yMin) * this.panFactor;
+	      if (direction === "left") {
+	        this.resetWindow(this.xMin - xAdjust, this.xMax - xAdjust, this.yMin, this.yMax);
+	      } else if (direction === "right") {
+	        this.resetWindow(this.xMin + xAdjust, this.xMax + xAdjust, this.yMin, this.yMax);
+	      } else if (direction === "up") {
+	        this.resetWindow(this.xMin, this.xMax, this.yMin + yAdjust, this.yMax + yAdjust);
+	      } else if (direction === "down") {
+	        this.resetWindow(this.xMin, this.xMax, this.yMin - yAdjust, this.yMax - yAdjust);
+	      } else {}
 	    }
 	  }, {
 	    key: 'updateAxisLocations',
@@ -286,10 +326,11 @@
 	      this.ctx.beginPath();
 	      this.ctx.rect(0, this.xAxisPixelsDown, this.canvas.width, 1); // x axis
 	      this.ctx.rect(this.yAxisPixelsOver, 0, 1, this.canvas.height); // y axis
-	      this.ctx.fillStyle = "#FF0000";
+	      // this.ctx.fillStyle = "#FF0000";
+	      this.ctx.fillStyle = "black";
 	      this.ctx.fill();
 	      this.ctx.closePath();
-	      this.drawAxisLabels();
+	      // this.drawAxisLabels();
 	    }
 	  }, {
 	    key: 'drawAxisLabels',
@@ -461,7 +502,7 @@
 	
 	      try {
 	        var latex = node ? node.toTex({ implicit: 'show' }) : '';
-	        console.log(latex);
+	        // console.log(latex);
 	        var elem = MathJax.Hub.getAllJax('pretty')[0];
 	        MathJax.Hub.Queue(['Text', elem, latex]);
 	      } catch (err) {}

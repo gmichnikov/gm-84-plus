@@ -10,7 +10,8 @@ class Plane {
     this.xMax = xMax;
     this.yMin = yMin;
     this.yMax = yMax;
-    this.zoomFactor = 2;
+    this.zoomFactor = 1.15;
+    this.panFactor = 0.1;
 
     this.mouseXPixel = this.canvas.width/2;
     this.mouseYPixel = this.canvas.height/2;
@@ -32,7 +33,13 @@ class Plane {
     let that = this;
     $('.window-values').on("input", () => this.updateWindow());
     $('#reset-window-standard').on("click", () => this.resetWindow(-10, 10, -10, 10));
-    $('#reset-window-square').on("click", () => this.resetWindow(-15, 15, -10, 10));
+    $('#reset-window-square').on("click", () => this.resetWindow(-16, 16, -10, 10));
+    $('#zoom-in').on("click", () => this.zoom("in", true));
+    $('#zoom-out').on("click", () => this.zoom("out", true));
+    $('#pan-left').on("click", () => this.pan("left"));
+    $('#pan-right').on("click", () => this.pan("right"));
+    $('#pan-up').on("click", () => this.pan("up"));
+    $('#pan-down').on("click", () => this.pan("down"));
     $(window).bind('mousewheel', function(e){
       if(e.originalEvent.wheelDelta /120 > 0) {
         that.zoom("in");
@@ -50,7 +57,8 @@ class Plane {
 
     document.addEventListener("mousemove", mouseMoveHandler, false);
     function mouseMoveHandler(e) {
-      that.mouseXPixel = e.clientX - that.canvas.offsetLeft;
+      // console.log(that.canvas.offsetLeft, that.canvas.offsetTop);
+      that.mouseXPixel = e.clientX - (that.canvas.offsetLeft + $('.container')[0].offsetLeft);
       that.mouseYPixel = e.clientY - that.canvas.offsetTop;
       that.mouseX = UTIL.calcXCoord(that.mouseXPixel, that.canvas, that);
       that.mouseY = UTIL.calcYCoord(that.mouseYPixel, that.canvas, that);
@@ -119,22 +127,41 @@ class Plane {
   }
 
   mouseInBounds() {
+    // console.log(this.mouseXPixel, this.mouseYPixel);
     return this.mouseXPixel > 0 && this.mouseXPixel < this.canvas.width && this.mouseYPixel > 0 && this.mouseYPixel < this.canvas.height;
+
   }
 
-  zoom(direction) {
-    if(this.mouseInBounds()) {
+  zoom(direction, button = false) {
+    if(this.mouseInBounds() || button) {
       let multiplier = (direction === "in" ? 1/this.zoomFactor : this.zoomFactor);
 
-      let dilationX = this.mouseX;
+      let centerX = (this.xMax + this.xMin)/2;
+      let dilationX = (button ? centerX : this.mouseX);
       this.xMax = (this.xMax - dilationX) * multiplier + dilationX;
       this.xMin = dilationX - (dilationX - this.xMin) * multiplier;
 
-      let dilationY = this.mouseY;
+      let centerY = (this.yMax + this.yMin)/2;
+      let dilationY = (button ? centerY : this.mouseY);
       this.yMax = (this.yMax - dilationY) * multiplier + dilationY;
       this.yMin = dilationY - (dilationY - this.yMin) * multiplier;
 
       this.resetWindow(this.xMin, this.xMax, this.yMin, this.yMax);
+    }
+  }
+
+  pan(direction) {
+    let xAdjust = (this.xMax - this.xMin) * this.panFactor;
+    let yAdjust = (this.yMax - this.yMin) * this.panFactor;
+    if (direction === "left") {
+      this.resetWindow(this.xMin - xAdjust, this.xMax - xAdjust, this.yMin, this.yMax);
+    } else if (direction === "right") {
+      this.resetWindow(this.xMin + xAdjust, this.xMax + xAdjust, this.yMin, this.yMax);
+    } else if (direction === "up") {
+      this.resetWindow(this.xMin, this.xMax, this.yMin + yAdjust, this.yMax + yAdjust);
+    } else if (direction === "down") {
+      this.resetWindow(this.xMin, this.xMax, this.yMin - yAdjust, this.yMax - yAdjust);
+    } else {
     }
   }
 
@@ -167,10 +194,11 @@ class Plane {
     this.ctx.beginPath();
     this.ctx.rect(0, this.xAxisPixelsDown, this.canvas.width, 1); // x axis
     this.ctx.rect(this.yAxisPixelsOver, 0, 1, this.canvas.height); // y axis
-    this.ctx.fillStyle = "#FF0000";
+    // this.ctx.fillStyle = "#FF0000";
+    this.ctx.fillStyle = "black";
     this.ctx.fill();
     this.ctx.closePath();
-    this.drawAxisLabels();
+    // this.drawAxisLabels();
   }
 
   drawAxisLabels() {

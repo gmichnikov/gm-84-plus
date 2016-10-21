@@ -96,7 +96,7 @@ class Equation {
 
     try {
       let latex = node ? node.toTex({implicit:'show'}) : '';
-      console.log(latex);
+      // console.log(latex);
       let elem = MathJax.Hub.getAllJax('pretty')[0];
       MathJax.Hub.Queue(['Text', elem, latex]);
     }

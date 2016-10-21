@@ -18,6 +18,9 @@
     <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" charset="utf-8"></script>
     <!-- <script src="./js/math.min.js" charset="utf-8"></script> -->
 
+    <!-- google icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
     <!-- custom -->
     <link rel='stylesheet' href='./css/graph.css' />
 
@@ -25,42 +28,58 @@
 
   <body>
 
-    <canvas id="myCanvas" width="600" height="400"></canvas>
-
-
-    <button id="draw-graph">Animate graph</button>
-    <input id='colorpicker' />
-    <input type='checkbox' id="randomColor"/> Random Colors
-    <!-- <input type='checkbox' id="hide-graph"/> Hide -->
-    <input type='checkbox' id="trace-mode"/> Trace Mode?
-
-    <br />
-
-    expression <input id="expression" class="trigger-redraw" value="x * (c + 1) * sin(x + c)"/>
-    sample x <input id="x-value" class="trigger-redraw" />
-
-    <br />
-
-    c min<input class="c-data" id="c-min" value="-10"></input>
-    c max<input class="c-data" id="c-max" value="10"></input>
-    c increment<input class="c-data" id="c-increment" value="0.4"></input>
-
-    <div id="c-value"></div>
-    expression value: <span id="result">None Yet</span>
-
-    <br>
-    x min<input class="window-values" id="window-x-min" value="-10"></input>
-    x max<input class="window-values" id="window-x-max" value="10"></input>
-    y min<input class="window-values" id="window-y-min" value="-10"></input>
-    y max<input class="window-values" id="window-y-max" value="10"></input>
-    <button id="reset-window-standard">Standard</button>
-    <button id="reset-window-square">Square</button>
-
-
-    <div id="pretty">$$$$</div>
-    <div id="slider">
-      <div id="custom-handle" class="ui-slider-handle"></div>
+    <div class="container">
+      <img src="calc-gm.jpg" />
+      <canvas id="myCanvas" width="560" height="350"></canvas>
     </div>
+
+    <div class="else">
+
+
+      <button id="draw-graph">Animate graph</button>
+      <input id='colorpicker' />
+      <input type='checkbox' id="randomColor"/> Random Colors
+      <!-- <input type='checkbox' id="hide-graph"/> Hide -->
+      <input type='checkbox' id="trace-mode"/> Trace Mode?
+
+      <br />
+
+      expression <input id="expression" class="trigger-redraw" value="x * (c + 1) * sin(x + c)"/>
+      sample x <input id="x-value" class="trigger-redraw" />
+
+      <br />
+
+      c min<input class="c-data" id="c-min" value="-10"></input>
+      c max<input class="c-data" id="c-max" value="10"></input>
+      c increment<input class="c-data" id="c-increment" value="0.4"></input>
+
+      <div id="c-value"></div>
+      expression value: <span id="result">None Yet</span>
+
+      <br>
+      x min<input class="window-values" id="window-x-min" value="-10"></input>
+      x max<input class="window-values" id="window-x-max" value="10"></input>
+      y min<input class="window-values" id="window-y-min" value="-10"></input>
+      y max<input class="window-values" id="window-y-max" value="10"></input>
+      <button id="reset-window-standard">Standard</button>
+      <button id="reset-window-square">Square</button>
+
+
+      <div id="pretty">$$$$</div>
+      <div id="slider">
+        <div id="custom-handle" class="ui-slider-handle"></div>
+      </div>
+
+      <i class="material-icons plane-adjust" id="zoom-in">zoom_in</i>
+      <i class="material-icons plane-adjust" id="zoom-out">zoom_out</i>
+      <i class="material-icons plane-adjust" id="pan-left">keyboard_arrow_left</i>
+      <i class="material-icons plane-adjust" id="pan-right">keyboard_arrow_right</i>
+      <i class="material-icons plane-adjust" id="pan-up">keyboard_arrow_up</i>
+      <i class="material-icons plane-adjust" id="pan-down">keyboard_arrow_down</i>
+
+
+    </div>
+
 
     <script src="./js/bundle.js" charset="utf-8"></script>
 
