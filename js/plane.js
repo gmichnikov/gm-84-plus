@@ -54,6 +54,27 @@ class Plane {
       that.mouseYPixel = e.clientY - that.canvas.offsetTop;
       that.mouseX = UTIL.calcXCoord(that.mouseXPixel, that.canvas, that);
       that.mouseY = UTIL.calcYCoord(that.mouseYPixel, that.canvas, that);
+
+      if (that.equation.traceMode) {
+        let scope = { x: that.mouseX, c: that.equation.c };
+        let yCoord = math.format(that.equation.compiledExpr.eval(scope));
+        let yPixel = UTIL.calcYPixel(parseFloat(yCoord), that.canvas, that);
+        let ctx = that.ctx;
+
+        that.equation.logEquation();
+        ctx.beginPath();
+        ctx.arc(that.mouseXPixel, yPixel, 10, 0, Math.PI*2);
+        ctx.fillStyle = "yellow";
+        ctx.fill();
+        ctx.closePath();
+
+        ctx.textAlign = "left";
+        ctx.font = "16px Arial";
+        let text = `(${math.round(that.mouseX, 3)}, ${math.round(yCoord, 3)})`;
+        let textWidth = ctx.measureText(text).width;
+        ctx.fillStyle = "purple";
+        ctx.fillText(text, 20, 20);
+      }
       // console.log(that.mouseXPixel, that.mouseYPixel);
       // console.log(that.mouseX, that.mouseY);
     }

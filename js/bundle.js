@@ -159,6 +159,27 @@
 	        that.mouseYPixel = e.clientY - that.canvas.offsetTop;
 	        that.mouseX = UTIL.calcXCoord(that.mouseXPixel, that.canvas, that);
 	        that.mouseY = UTIL.calcYCoord(that.mouseYPixel, that.canvas, that);
+	
+	        if (that.equation.traceMode) {
+	          var scope = { x: that.mouseX, c: that.equation.c };
+	          var yCoord = math.format(that.equation.compiledExpr.eval(scope));
+	          var yPixel = UTIL.calcYPixel(parseFloat(yCoord), that.canvas, that);
+	          var ctx = that.ctx;
+	
+	          that.equation.logEquation();
+	          ctx.beginPath();
+	          ctx.arc(that.mouseXPixel, yPixel, 10, 0, Math.PI * 2);
+	          ctx.fillStyle = "yellow";
+	          ctx.fill();
+	          ctx.closePath();
+	
+	          ctx.textAlign = "left";
+	          ctx.font = "16px Arial";
+	          var text = '(' + math.round(that.mouseX, 3) + ', ' + math.round(yCoord, 3) + ')';
+	          var textWidth = ctx.measureText(text).width;
+	          ctx.fillStyle = "purple";
+	          ctx.fillText(text, 20, 20);
+	        }
 	        // console.log(that.mouseXPixel, that.mouseYPixel);
 	        // console.log(that.mouseX, that.mouseY);
 	      }
@@ -331,6 +352,10 @@
 	    _classCallCheck(this, Equation);
 	
 	    this.plane = plane;
+	    this.traceMode = false;
+	    this.compiledExpr = null;
+	    this.c = 0;
+	
 	    this.setup();
 	    this.logEquation(0);
 	    // this.drawGraphOnce = this.drawGraphOnce.bind(this);
@@ -368,6 +393,11 @@
 	        return _this.adjustSliderBounds();
 	      });
 	
+	      $('#trace-mode').on("click", function () {
+	        that.traceMode = !that.traceMode;
+	        that.logEquation();
+	      });
+	
 	      $(function () {
 	        var handle = $("#custom-handle");
 	        $("#slider").slider({
@@ -377,6 +407,7 @@
 	          slide: function slide(event, ui) {
 	            handle.text(ui.value);
 	            var c = parseFloat(ui.value);
+	            that.c = c;
 	            that.logEquation(c);
 	            document.getElementById('c-value').innerHTML = 'c = ' + c;
 	          },
@@ -389,10 +420,8 @@
 	  }, {
 	    key: 'drawGraphOnce',
 	    value: function drawGraphOnce(compiledExpr) {
-	      var c = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
-	
 	      this.plane.drawAxes();
-	      this.drawAnything(compiledExpr, c);
+	      this.drawAnything(compiledExpr, this.c);
 	    }
 	  }, {
 	    key: 'adjustSliderBounds',
@@ -404,10 +433,11 @@
 	    }
 	  }, {
 	    key: 'logEquation',
-	    value: function logEquation(c) {
+	    value: function logEquation() {
 	      // called on input in forms
-	      if (typeof c !== "number") {
-	        c = 0;
+	      var that = this;
+	      if (typeof that.c !== "number") {
+	        that.c = 0;
 	      }
 	
 	      var expr = document.getElementById('expression');
@@ -416,14 +446,14 @@
 	      var pretty = document.getElementById('pretty');
 	
 	      var node = null;
-	      var that = this;
 	
 	      try {
 	        node = math.parse(expr.value);
 	        var compiledExpr = node.compile();
-	        that.drawGraphOnce(compiledExpr, c);
+	        that.compiledExpr = compiledExpr;
+	        that.drawGraphOnce(compiledExpr, that.c);
 	        // result.innerHTML = '';
-	        var scope = { x: xVal.value, c: c };
+	        var scope = { x: xVal.value, c: that.c };
 	        result.innerHTML = math.format(compiledExpr.eval(scope));
 	      } catch (err) {
 	        result.innerHTML = '<span style="color: red;">' + err.toString() + '</span>';
@@ -431,6 +461,7 @@
 	
 	      try {
 	        var latex = node ? node.toTex({ implicit: 'show' }) : '';
+	        console.log(latex);
 	        var elem = MathJax.Hub.getAllJax('pretty')[0];
 	        MathJax.Hub.Queue(['Text', elem, latex]);
 	      } catch (err) {}
@@ -449,6 +480,7 @@
 	      try {
 	        var node = math.parse(expr.value);
 	        var compiledExpr = node.compile();
+	        that.compiledExpr = compiledExpr;
 	        that.animateGraph(compiledExpr);
 	      } catch (err) {}
 	    }

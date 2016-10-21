@@ -4,6 +4,10 @@ import * as UTIL from './util';
 class Equation {
   constructor(plane) {
     this.plane = plane;
+    this.traceMode = false;
+    this.compiledExpr = null;
+    this.c = 0;
+
     this.setup();
     this.logEquation(0);
     // this.drawGraphOnce = this.drawGraphOnce.bind(this);
@@ -27,6 +31,11 @@ class Equation {
     $('.trigger-redraw').on("input", () => this.logEquation());
     $('.c-data').on("input", () => this.adjustSliderBounds());
 
+    $('#trace-mode').on("click", () => {
+      that.traceMode = !that.traceMode;
+      that.logEquation();
+    });
+
     $( function() {
       var handle = $( "#custom-handle" );
       $( "#slider" ).slider({
@@ -36,6 +45,7 @@ class Equation {
         slide: function( event, ui ) {
           handle.text( ui.value );
           let c = parseFloat(ui.value);
+          that.c = c;
           that.logEquation(c);
           document.getElementById('c-value').innerHTML = `c = ${c}`;
         },
@@ -46,9 +56,9 @@ class Equation {
     } );
   }
 
-  drawGraphOnce(compiledExpr, c = 0) {
+  drawGraphOnce(compiledExpr) {
     this.plane.drawAxes();
-    this.drawAnything(compiledExpr, c);
+    this.drawAnything(compiledExpr, this.c);
   }
 
   adjustSliderBounds() {
@@ -58,9 +68,10 @@ class Equation {
     $( "#slider" ).slider( "option", "max", cMaxVal );
   }
 
-  logEquation(c) { // called on input in forms
-    if (typeof(c) !== "number") {
-      c = 0;
+  logEquation() { // called on input in forms
+    let that = this;
+    if (typeof(that.c) !== "number") {
+      that.c = 0;
     }
 
     let expr = document.getElementById('expression');
@@ -69,14 +80,14 @@ class Equation {
     let pretty = document.getElementById('pretty');
 
     let node = null;
-    let that = this;
 
     try {
       node = math.parse(expr.value);
       let compiledExpr = node.compile();
-      that.drawGraphOnce(compiledExpr, c);
+      that.compiledExpr = compiledExpr;
+      that.drawGraphOnce(compiledExpr, that.c);
       // result.innerHTML = '';
-      let scope = {x: xVal.value, c: c};
+      let scope = {x: xVal.value, c: that.c};
       result.innerHTML = math.format(compiledExpr.eval(scope));
     }
     catch (err) {
@@ -85,6 +96,7 @@ class Equation {
 
     try {
       let latex = node ? node.toTex({implicit:'show'}) : '';
+      console.log(latex);
       let elem = MathJax.Hub.getAllJax('pretty')[0];
       MathJax.Hub.Queue(['Text', elem, latex]);
     }
@@ -104,6 +116,7 @@ class Equation {
     try {
       let node = math.parse(expr.value);
       let compiledExpr = node.compile();
+      that.compiledExpr = compiledExpr;
       that.animateGraph(compiledExpr);
     }
     catch (err) {
