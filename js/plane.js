@@ -59,7 +59,7 @@ class Plane {
     function mouseMoveHandler(e) {
       // console.log(that.canvas.offsetLeft, that.canvas.offsetTop);
       that.mouseXPixel = e.clientX - (that.canvas.offsetLeft + $('.container')[0].offsetLeft);
-      that.mouseYPixel = e.clientY - that.canvas.offsetTop;
+      that.mouseYPixel = e.clientY - (that.canvas.offsetTop + $('.container')[0].offsetTop);
       that.mouseX = UTIL.calcXCoord(that.mouseXPixel, that.canvas, that);
       that.mouseY = UTIL.calcYCoord(that.mouseYPixel, that.canvas, that);
 

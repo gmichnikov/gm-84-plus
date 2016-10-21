@@ -1,13 +1,33 @@
 * {
   padding: 0;
   margin: 0;
+  border: 0;
+  outline: 0;
+  font: inherit;
+  box-sizing: inherit;
+  text-align: inherit;
+  text-decoration: inherit;
+  vertical-align: inherit;
+  color: inherit;
+  background: transparent;
 }
 
+body {
+  font-size: 16px;
+}
+
+ul {
+  list-style: none;
+}
+
+a:visited {
+  color: inherit;
+}
 
 .container {
   width: 650px;
   height: 400px;
-  margin: 0 auto;
+  margin: 20px auto;
   position: relative;
 }
 
@@ -42,10 +62,6 @@ canvas:active {
 }
 
 
-div, input, button {
-  margin-left: 5px;
-}
-
 #slider {
   width: 400px;
 }
@@ -62,4 +78,47 @@ div, input, button {
 
 .plane-adjust {
   cursor: pointer;
+}
+
+.plane-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: absolute;
+  width: 650px;
+  background-color: #070707;
+  top: 500px;
+  color: rgb(190, 210, 204);
+
+}
+
+.plane-controls a, .zoom-option {
+  text-decoration: none;
+  background-color: #777;
+  color: white;
+  padding: 2px 5px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.plane-controls a:hover {
+  background-color: #555;
+}
+
+.plane-controls a:active {
+  font-size: 17px;
+}
+
+
+.window-values {
+
+}
+
+.window-values input {
+  width: 40px;
+}
+
+
+.plane-adjust-buttons {
+
 }
