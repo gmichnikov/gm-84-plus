@@ -122,3 +122,22 @@ canvas:active {
 .plane-adjust-buttons {
 
 }
+
+#window-modal label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 3px;
+}
+
+#window-modal input {
+  display: block;
+  border: 1px solid rgb(190, 210, 204);
+  border-radius: 5px;
+  margin-bottom: 20px;
+  padding: 5px;
+}
+
+#window-modal {
+  width: auto;
+  margin: 0 auto;
+}
