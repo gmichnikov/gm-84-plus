@@ -47,7 +47,6 @@ class Equation {
           let c = parseFloat(ui.value);
           that.c = c;
           that.logEquation(c);
-          document.getElementById('c-value').innerHTML = `c = ${c}`;
         },
         min: -10,
         max: 10,
@@ -75,8 +74,6 @@ class Equation {
     }
 
     let expr = document.getElementById('expression');
-    let xVal = document.getElementById('x-value');
-    let result = document.getElementById('result');
     let pretty = document.getElementById('pretty');
 
     let node = null;
@@ -86,12 +83,9 @@ class Equation {
       let compiledExpr = node.compile();
       that.compiledExpr = compiledExpr;
       that.drawGraphOnce(compiledExpr, that.c);
-      // result.innerHTML = '';
-      let scope = {x: xVal.value, c: that.c};
-      result.innerHTML = math.format(compiledExpr.eval(scope));
     }
     catch (err) {
-      result.innerHTML = '<span style="color: red;">' + err.toString() + '</span>';
+      console.log(err.toString());
     }
 
     try {
@@ -126,10 +120,13 @@ class Equation {
 
   animateGraph(compiledExpr) {
     let that = this;
-    let cValue = document.getElementById('c-value');
     let cMinVal = parseFloat(document.getElementById('c-min').value);
     let cMaxVal = parseFloat(document.getElementById('c-max').value);
-    let cIncrementVal = parseFloat(document.getElementById('c-increment').value);
+    if ( cMaxVal <= cMinVal ) {
+      cMaxVal = cMinVal + 20;
+      document.getElementById('c-max').value = cMaxVal;
+    }
+    let cIncrementVal = (cMaxVal - cMinVal) / 50;
 
     let c = cMinVal;
 
@@ -139,7 +136,6 @@ class Equation {
       // drawSin(c)
 
       that.drawAnything(compiledExpr, c);
-      cValue.innerHTML = `c = ${c}`;
       $( "#slider" ).slider( "value", c );
       $( "#custom-handle" ).text(c);
 
