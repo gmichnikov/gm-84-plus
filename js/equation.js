@@ -49,7 +49,6 @@ class Equation {
   drawGraphOnce(compiledExpr, c = 0) {
     this.plane.drawAxes();
     this.drawAnything(compiledExpr, c);
-    console.log(this.plane.mouseX, this.plane.mouseY);
   }
 
   adjustSliderBounds() {

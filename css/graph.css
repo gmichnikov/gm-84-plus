@@ -9,6 +9,15 @@ canvas {
   margin: 50px auto;
 }
 
+canvas:hover {
+  cursor: pointer;
+}
+
+canvas:active {
+  cursor: move;
+}
+
+
 div, input, button {
   margin-left: 5px;
 }

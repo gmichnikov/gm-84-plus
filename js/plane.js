@@ -17,6 +17,11 @@ class Plane {
     this.mouseX = 0;
     this.mouseY = 0;
 
+    this.mousePressed = false;
+    this.drag = false;
+    this.dragStartX = 0;
+    this.dragStartY = 0;
+
     this.updateAxisLocations();
     this.bindEvents();
 
@@ -36,16 +41,60 @@ class Plane {
         that.zoom("out");
       }
     });
-    document.addEventListener("mousemove", mouseMoveHandler, false);
 
+    $(document).mousedown(function(){
+        that.mousePressed = true;
+    }).mouseup(function(){
+        that.mousePressed = false;
+    });
+
+    document.addEventListener("mousemove", mouseMoveHandler, false);
     function mouseMoveHandler(e) {
       that.mouseXPixel = e.clientX - that.canvas.offsetLeft;
       that.mouseYPixel = e.clientY - that.canvas.offsetTop;
       that.mouseX = UTIL.calcXCoord(that.mouseXPixel, that.canvas, that);
       that.mouseY = UTIL.calcYCoord(that.mouseYPixel, that.canvas, that);
-      console.log(that.mouseXPixel, that.mouseYPixel);
-      console.log(that.mouseX, that.mouseY);
+      // console.log(that.mouseXPixel, that.mouseYPixel);
+      // console.log(that.mouseX, that.mouseY);
     }
+
+    window.requestAnimationFrame(() => this.dragUpdate());
+
+  }
+
+  dragUpdate() {
+    let that = this;
+    let pixelsDraggedX = 0;
+    let pixelsDraggedY = 0;
+    let unitsDraggedX = 0;
+    let unitsDraggedY = 0;
+    if (that.mousePressed) {
+        if (!that.drag) {  // picking up the plane
+          that.dragstartX = that.mouseXPixel;
+          that.dragstartY = that.mouseYPixel;
+        }
+        if (that.mouseInBounds()){ // turn drag on if clicked and in bounds
+          that.drag = true;
+        }
+
+    } else { // if not clicked
+      that.drag = false;
+    }
+
+    if (that.drag) {
+        pixelsDraggedX = that.mouseXPixel - that.dragstartX;
+        pixelsDraggedY = that.mouseYPixel - that.dragstartY;
+        that.dragstartX = that.mouseXPixel;
+        that.dragstartY = that.mouseYPixel;
+    }
+
+    if (math.abs(pixelsDraggedY) > 0 || math.abs(pixelsDraggedX) > 0) {
+      unitsDraggedX = (pixelsDraggedX / that.canvas.width) * (that.xMax - that.xMin);
+      unitsDraggedY = -(pixelsDraggedY / that.canvas.height) * (that.yMax - that.yMin);
+      this.resetWindow(that.xMin - unitsDraggedX, that.xMax - unitsDraggedX, that.yMin - unitsDraggedY, that.yMax - unitsDraggedY);
+    }
+
+    window.requestAnimationFrame(() => this.dragUpdate());
   }
 
   mouseInBounds() {
@@ -56,13 +105,10 @@ class Plane {
     if(this.mouseInBounds()) {
       let multiplier = (direction === "in" ? 1/this.zoomFactor : this.zoomFactor);
 
-      console.log(this.mouseX, this.mouseY);
-      // let dilationX = (this.xMax + this.xMin) / 2;
       let dilationX = this.mouseX;
       this.xMax = (this.xMax - dilationX) * multiplier + dilationX;
       this.xMin = dilationX - (dilationX - this.xMin) * multiplier;
 
-      // let dilationY = (this.yMax + this.yMin) / 2;
       let dilationY = this.mouseY;
       this.yMax = (this.yMax - dilationY) * multiplier + dilationY;
       this.yMin = dilationY - (dilationY - this.yMin) * multiplier;
