@@ -46,7 +46,7 @@
         <span class="window-button">
           <a href="#window-modal" rel="modal:open">WINDOW</a>
         </span>
-        <span class="plane-adjust-buttons">
+        <span class="plane-adjust-buttons" >
           <i class="material-icons plane-adjust" id="zoom-in">zoom_in</i>
           <i class="material-icons plane-adjust" id="zoom-out">zoom_out</i>
           <i class="material-icons plane-adjust" id="pan-left">keyboard_arrow_left</i>
@@ -69,27 +69,35 @@
       <label>Y max: </label><input class="window-values" id="window-y-max" value="10"></input>
     </div>
 
+
+
+
     <div class="else">
 
 
       <button id="draw-graph">Animate graph</button>
+      c min<input class="c-data" id="c-min" value="-10"></input>
+      c max<input class="c-data" id="c-max" value="10"></input>
+
+      <div id="c-value"></div>
+      <div id="slider">
+        <div id="custom-handle" class="ui-slider-handle"></div>
+      </div>
+
+
+
+
+
       <input id='colorpicker' />
       <input type='checkbox' id="randomColor"/> Random Colors
       <!-- <input type='checkbox' id="hide-graph"/> Hide -->
       <input type='checkbox' id="trace-mode"/> Trace Mode?
 
       <br />
-
       expression <input id="expression" class="trigger-redraw" value="x * (c + 1) * sin(x + c)"/>
       <br />
 
-      c min<input class="c-data" id="c-min" value="-10"></input>
-      c max<input class="c-data" id="c-max" value="10"></input>
-
       <div id="pretty">$$$$</div>
-      <div id="slider">
-        <div id="custom-handle" class="ui-slider-handle"></div>
-      </div>
 
     </div>
 
