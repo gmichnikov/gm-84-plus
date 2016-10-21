@@ -154,3 +154,5 @@ each graph is an object
 
 draw with lines or dots
 make it draw and render latex right away
+
+add other lines besides axes

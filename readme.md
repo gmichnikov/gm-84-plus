@@ -24,7 +24,7 @@ In addition, this project will include:
 
 This app will consist of a single screen, with the coordinate plane taking up most of the space. There will be an area for entering equations and zooming/panning to the left. Links to the Github, my LinkedIn, and the directions modal will appear at the bottom. Each graph will have a color selector next to it, as well as checkbox for showing/hiding the graph.
 
-![wireframes](https://github.com/gmichnikov/gm-84-plus/blob/master/wireframes/wireframes.001.jpeg)
+![wireframes](https://github.com/gmichnikov/gm-84-plus/blob/master/docs/wireframes/wireframes.001.jpeg)
 
 ### Architecture and Technologies
 
