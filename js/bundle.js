@@ -158,6 +158,9 @@
 	      $('#pan-down').on("click", function () {
 	        return _this.pan("down");
 	      });
+	      $('.equation-hider').on("click", function () {
+	        return $('.equations').toggleClass('hide-equations');
+	      });
 	      $(window).bind('mousewheel', function (e) {
 	        if (e.originalEvent.wheelDelta / 120 > 0) {
 	          that.zoom("in");
@@ -453,7 +456,7 @@
 	          },
 	          min: -10,
 	          max: 10,
-	          step: 0.1
+	          step: 0.4
 	        });
 	      });
 	    }

@@ -25,7 +25,7 @@ a:visited {
 }
 
 .container {
-  width: 650px;
+  width: 900px;
   height: 400px;
   margin: 20px auto;
   position: relative;
@@ -33,6 +33,7 @@ a:visited {
 
 .container img {
   position: absolute;
+  left: 250px;
   width: 650px;
   height: auto;
 }
@@ -46,7 +47,7 @@ canvas {
   background: rgb(110, 132, 105);
   display: block;
   position: absolute;
-  left: 42px;
+  left: 292px;
   top:98px;
   border: 2px solid #222;
   border-radius: 10px;
@@ -97,6 +98,7 @@ canvas:active {
   top: 500px;
   color: rgb(190, 210, 204);
   padding: 10px;
+  left: 250px;
 }
 
 .plane-controls a, .zoom-option {
@@ -166,6 +168,7 @@ canvas:active {
   width: 630px;
   background-color: #070707;
   top: 548px;
+  left: 250px;
   padding: 10px 10px;
 }
 
@@ -174,4 +177,16 @@ canvas:active {
   width: 60px;
   text-align: center;
   border-radius: 5px;
+}
+
+
+.equations {
+  position: absolute;
+  width: 250px;
+  height: 586px;
+  background-color: blue;
+}
+
+.hide-equations {
+  display: none;
 }

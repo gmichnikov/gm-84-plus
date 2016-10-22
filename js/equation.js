@@ -50,7 +50,7 @@ class Equation {
         },
         min: -10,
         max: 10,
-        step: 0.1
+        step: 0.4
       });
     } );
   }

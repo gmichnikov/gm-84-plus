@@ -40,6 +40,7 @@ class Plane {
     $('#pan-right').on("click", () => this.pan("right"));
     $('#pan-up').on("click", () => this.pan("up"));
     $('#pan-down').on("click", () => this.pan("down"));
+    $('.equation-hider').on("click", () => $('.equations').toggleClass('hide-equations'));
     $(window).bind('mousewheel', function(e){
       if(e.originalEvent.wheelDelta /120 > 0) {
         that.zoom("in");

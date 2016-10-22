@@ -48,6 +48,7 @@
       <canvas id="myCanvas" width="560" height="350"></canvas>
 
       <div class="plane-controls">
+        <a class="equation-hider" title="Show/Hide equation editor">Y=</a>
         <a class="zoom-option" id="reset-window-standard" title="Resets window to X(-10, 10)  and Y(-10, 10)">Z-Standard</a>
         <a class="zoom-option" id="reset-window-square" title="Resets window to X(-16, 16)  and Y(-10, 10), which maintains xy proportions">Z-Square</a>
         <a id="draw-graph">Animate</a>
@@ -70,6 +71,19 @@
         <input class="c-data" id="c-max" value="10" title="Enter a maximum value for c"></input>
       </div>
 
+      <div class="equations">
+        <div class="equation">
+          <input id='colorpicker' />
+          <input type='checkbox' id="randomColor"/> Random Colors
+          <input type='checkbox' id="hide-graph"/> Hide
+          <input type='checkbox' id="trace-mode"/> Trace Mode?
+          expression <input id="expression" class="trigger-redraw" value="x * (c + 1) * sin(x + c)"/>
+          <br />
+
+          <div id="pretty">$$$$</div>
+        </div>
+      </div>
+
     </div>
 
     <div id="window-modal" style="display:none;">
@@ -78,24 +92,6 @@
       <label>Y min: </label><input class="window-values" id="window-y-min" value="-10"></input>
       <label>Y max: </label><input class="window-values" id="window-y-max" value="10"></input>
     </div>
-
-
-
-
-    <div class="else">
-      <input id='colorpicker' />
-      <input type='checkbox' id="randomColor"/> Random Colors
-      <!-- <input type='checkbox' id="hide-graph"/> Hide -->
-      <input type='checkbox' id="trace-mode"/> Trace Mode?
-
-      <br />
-      expression <input id="expression" class="trigger-redraw" value="x * (c + 1) * sin(x + c)"/>
-      <br />
-
-      <div id="pretty">$$$$</div>
-
-    </div>
-
 
     <script src="./js/bundle.js" charset="utf-8"></script>
 
