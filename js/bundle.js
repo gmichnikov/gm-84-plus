@@ -177,10 +177,10 @@
 	        var handle = $("#custom-handle");
 	        $("#slider").slider({
 	          create: function create() {
-	            handle.text($(this).slider("value"));
+	            handle.text("c=" + $(this).slider("value"));
 	          },
 	          slide: function slide(event, ui) {
-	            handle.text(ui.value);
+	            handle.text("c=" + ui.value);
 	            var c = parseFloat(ui.value);
 	            that.c = c;
 	            that.logAllEquations();
@@ -462,7 +462,7 @@
 	        that.axesDrawn = false;
 	
 	        $("#slider").slider("value", that.c);
-	        $("#custom-handle").text(that.c);
+	        $("#custom-handle").text('c=' + that.c);
 	
 	        that.c = math.round(that.c + cIncrementVal, 2);
 	        if (that.c <= cMaxVal) {
