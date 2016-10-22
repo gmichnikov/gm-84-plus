@@ -2,24 +2,26 @@
 import * as UTIL from './util';
 
 class Equation {
-  constructor(plane) {
+  constructor(plane, startingColor) {
     this.plane = plane;
     this.traceMode = false;
     this.compiledExpr = null;
     this.c = 0;
+    this.startingColor = startingColor;
+    this.hidden = false;
 
-    this.setup();
+    this.setup(startingColor);
     this.logEquation(0);
     // this.drawGraphOnce = this.drawGraphOnce.bind(this);
     // this.logEquation = this.logEquation.bind(this);
   }
 
-  setup() {
+  setup(startingColor) {
     $("#colorpicker").spectrum({
       showPaletteOnly: true,
       showPalette:true,
       hideAfterPaletteSelect:true,
-      color: 'black',
+      color: startingColor,
       palette: ['black', 'red', 'orange', 'yellow', 'green', 'blue', 'violet', UTIL.randomColor()],
       change: () => this.logEquation(),
     });
@@ -89,14 +91,21 @@ class Equation {
     }
 
     try {
-      let latex = node ? node.toTex({implicit:'show'}) : '';
-      // console.log(latex);
+      let nodeWithY = math.parse(`Y==${expr.value}`);
+
+      let latex = nodeWithY ? nodeWithY.toTex({implicit:'show'}) : '';
       let elem = MathJax.Hub.getAllJax('pretty')[0];
+      if (!elem) {
+        pretty.innerHTML = '$$' + nodeWithY.toTex() + '$$';
+      }
       MathJax.Hub.Queue(['Text', elem, latex]);
     }
     catch (err) {
+      console.log("latex error");
     }
   }
+
+
 
   animateGraphNow() {
     let that = this;
@@ -153,7 +162,7 @@ class Equation {
   drawAnything(compiledExpr, c) {
     let ctx = this.plane.ctx;
     let canvas = this.plane.ctx.canvas;
-    ctx.fillStyle = "black";
+    ctx.fillStyle = this.startingColor;
     let chooseRandom = document.getElementById("randomColor").checked;
     let selectedColor = $("#colorpicker").spectrum("get");
     let that = this;

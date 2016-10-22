@@ -26,7 +26,7 @@ class Plane {
     this.updateAxisLocations();
     this.bindEvents();
 
-    this.equation = new Equation(this);
+    this.equation = new Equation(this, 'violet');
   }
 
   bindEvents() {

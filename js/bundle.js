@@ -122,7 +122,7 @@
 	    this.updateAxisLocations();
 	    this.bindEvents();
 	
-	    this.equation = new _equation2.default(this);
+	    this.equation = new _equation2.default(this, 'violet');
 	  }
 	
 	  _createClass(Plane, [{
@@ -392,15 +392,17 @@
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
 	var Equation = function () {
-	  function Equation(plane) {
+	  function Equation(plane, startingColor) {
 	    _classCallCheck(this, Equation);
 	
 	    this.plane = plane;
 	    this.traceMode = false;
 	    this.compiledExpr = null;
 	    this.c = 0;
+	    this.startingColor = startingColor;
+	    this.hidden = false;
 	
-	    this.setup();
+	    this.setup(startingColor);
 	    this.logEquation(0);
 	    // this.drawGraphOnce = this.drawGraphOnce.bind(this);
 	    // this.logEquation = this.logEquation.bind(this);
@@ -408,14 +410,14 @@
 	
 	  _createClass(Equation, [{
 	    key: 'setup',
-	    value: function setup() {
+	    value: function setup(startingColor) {
 	      var _this = this;
 	
 	      $("#colorpicker").spectrum({
 	        showPaletteOnly: true,
 	        showPalette: true,
 	        hideAfterPaletteSelect: true,
-	        color: 'black',
+	        color: startingColor,
 	        palette: ['black', 'red', 'orange', 'yellow', 'green', 'blue', 'violet', UTIL.randomColor()],
 	        change: function change() {
 	          return _this.logEquation();
@@ -498,11 +500,17 @@
 	      }
 	
 	      try {
-	        var latex = node ? node.toTex({ implicit: 'show' }) : '';
-	        // console.log(latex);
+	        var nodeWithY = math.parse('Y==' + expr.value);
+	
+	        var latex = nodeWithY ? nodeWithY.toTex({ implicit: 'show' }) : '';
 	        var elem = MathJax.Hub.getAllJax('pretty')[0];
+	        if (!elem) {
+	          pretty.innerHTML = '$$' + nodeWithY.toTex() + '$$';
+	        }
 	        MathJax.Hub.Queue(['Text', elem, latex]);
-	      } catch (err) {}
+	      } catch (err) {
+	        console.log("latex error");
+	      }
 	    }
 	  }, {
 	    key: 'animateGraphNow',
@@ -560,7 +568,7 @@
 	    value: function drawAnything(compiledExpr, c) {
 	      var ctx = this.plane.ctx;
 	      var canvas = this.plane.ctx.canvas;
-	      ctx.fillStyle = "black";
+	      ctx.fillStyle = this.startingColor;
 	      var chooseRandom = document.getElementById("randomColor").checked;
 	      var selectedColor = $("#colorpicker").spectrum("get");
 	      var that = this;

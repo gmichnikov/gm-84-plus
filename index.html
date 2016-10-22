@@ -51,7 +51,7 @@
         <a class="equation-hider" title="Show/Hide equation editor">Y=</a>
         <a class="zoom-option" id="reset-window-standard" title="Resets window to X(-10, 10)  and Y(-10, 10)">Z-Standard</a>
         <a class="zoom-option" id="reset-window-square" title="Resets window to X(-16, 16)  and Y(-10, 10), which maintains xy proportions">Z-Square</a>
-        <a id="draw-graph">Animate</a>
+        <a id="draw-graph" title="Redraws the graphs as c moves from the minimum to the maximum set below (only graphs of expressions containing c will change)" >Animate</a>
         <a href="#window-modal" rel="modal:open">Window</a>
         <span class="plane-adjust-buttons" >
           <i class="material-icons plane-adjust" id="zoom-in">zoom_in</i>
@@ -73,14 +73,18 @@
 
       <div class="equations">
         <div class="equation">
-          <input id='colorpicker' />
-          <input type='checkbox' id="randomColor"/> Random Colors
-          <input type='checkbox' id="hide-graph"/> Hide
-          <input type='checkbox' id="trace-mode"/> Trace Mode?
-          expression <input id="expression" class="trigger-redraw" value="x * (c + 1) * sin(x + c)"/>
-          <br />
+          <label>Y = </label>
+          <input id="expression" class="trigger-redraw" value="x * (c + 1) * sin(x + c)"/>
 
-          <div id="pretty">$$$$</div>
+          <span id="pretty">$$$$</span>
+
+          <input id='colorpicker' />
+          <input type='checkbox' id="randomColor"/> Random
+          <input type='checkbox' id="hide-graph"/> Hide
+
+          <input type='checkbox' id="trace-mode"/> Trace Mode?
+
+
         </div>
       </div>
 

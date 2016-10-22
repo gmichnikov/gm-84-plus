@@ -182,11 +182,30 @@ canvas:active {
 
 .equations {
   position: absolute;
-  width: 250px;
-  height: 586px;
-  background-color: blue;
+  width: 230px;
+  height: 566px;
+  background-color: rgb(190, 210, 204);
+  border: 5px solid black;
+  padding: 5px;
 }
 
 .hide-equations {
   display: none;
+}
+
+.MathJax_Display {
+  text-align: left !important;
+  margin: 0 !important;
+  display: inline !important;
+}
+
+
+#expression {
+  background-color: white;
+  padding: 3px;
+  border-radius: 5px;
+}
+
+.equation {
+  border-bottom: 5px solid black;
 }
