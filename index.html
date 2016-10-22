@@ -25,6 +25,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.0/spectrum.min.js"></script>
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.0/spectrum.min.css">
 
+    <!-- mathquill -->
+    <link rel="stylesheet" href="./css/mathquill.css"/>
+    <script src="./js/mathquill.min.js"></script>
+
     <!-- math.js and mathjax -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/3.5.3/math.min.js" charset="utf-8"></script>
     <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" charset="utf-8"></script>
@@ -118,6 +122,37 @@
       <label>X max: </label><input class="window-values" id="window-x-max" value="10"></input>
       <label>Y min: </label><input class="window-values" id="window-y-min" value="-10"></input>
       <label>Y max: </label><input class="window-values" id="window-y-max" value="10"></input>
+    </div>
+
+    <div class="else">
+      <p>Type math here: <span id="math-field"></span></p>
+      <p>LaTeX of what you typed: <span id="latex"></span></p>
+      <p>Temp holder: <span id="temp"></span></p>
+
+      <script>
+        var mathFieldSpan = document.getElementById('math-field');
+        var latexSpan = document.getElementById('latex');
+
+        var MQ = MathQuill.getInterface(2); // for backcompat
+        let temp = mathFieldSpan.innerHTML;
+        // console.log(temp);
+        var mathField = MQ.MathField(mathFieldSpan, {
+          spaceBehavesLikeTab: true, // configurable
+          autoCommands: 'pi theta sqrt sum',
+          substituteTextarea: function() {
+            return document.createElement('textarea');
+          },
+          handlers: {
+            edit: function() { // useful event handlers
+              // console.log(mathField.html());
+              console.log(mathField);
+              latexSpan.textContent = mathField.latex(); // simple API
+            }
+          }
+        });
+        // mathField.typedText('x=-b\\pm \\sqrt b^2  - 4ac');
+      </script>
+
     </div>
 
     <script src="./js/bundle.js" charset="utf-8"></script>

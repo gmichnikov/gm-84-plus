@@ -659,13 +659,19 @@
 	
 	      try {
 	        var nodeWithY = math.parse('Y==' + expr.value);
-	
+	        // console.log("step1");
 	        var latex = nodeWithY ? nodeWithY.toTex({ implicit: 'show' }) : '';
+	        // console.log("step2");
+	
 	        var elem = MathJax.Hub.getAllJax('pretty' + this.num)[0];
+	        // console.log("step3");
 	        if (!elem) {
+	          // console.log("step4");
 	          pretty.innerHTML = '$$' + nodeWithY.toTex() + '$$';
 	        }
+	        // console.log("step5");
 	        MathJax.Hub.Queue(['Text', elem, latex]);
+	        // console.log("step6");
 	      } catch (err) {
 	        console.log("latex error");
 	      }
