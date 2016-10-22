@@ -8,6 +8,14 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+    <script>
+    $( function() {
+      $( document ).tooltip({
+        hide: {
+        }
+      });
+    } );
+    </script>
 
     <!-- jquery modal -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.8.0/jquery.modal.min.js" type="text/javascript" charset="utf-8"></script>
@@ -40,12 +48,10 @@
       <canvas id="myCanvas" width="560" height="350"></canvas>
 
       <div class="plane-controls">
-        <span class="zoom-button">
-          <a href="#zoom-modal" rel="modal:open">ZOOM</a>
-        </span>
-        <span class="window-button">
-          <a href="#window-modal" rel="modal:open">WINDOW</a>
-        </span>
+        <a class="zoom-option" id="reset-window-standard" title="Resets window to X(-10, 10)  and Y(-10, 10)">Z-Standard</a>
+        <a class="zoom-option" id="reset-window-square" title="Resets window to X(-16, 16)  and Y(-10, 10), which maintains xy proportions">Z-Square</a>
+        <a id="draw-graph">Animate</a>
+        <a href="#window-modal" rel="modal:open">Window</a>
         <span class="plane-adjust-buttons" >
           <i class="material-icons plane-adjust" id="zoom-in">zoom_in</i>
           <i class="material-icons plane-adjust" id="zoom-out">zoom_out</i>
@@ -55,11 +61,15 @@
           <i class="material-icons plane-adjust" id="pan-down">keyboard_arrow_down</i>
         </span>
       </div>
-    </div>
 
-    <div id="zoom-modal" style="display:none;">
-      <a class="zoom-option" id="reset-window-standard">Standard</a>
-      <a class="zoom-option" id="reset-window-square">Square</a>
+      <div class="animation-group">
+        <input class="c-data" id="c-min" value="-10" title="Enter a minimum value for c"></input>
+        <div id="slider">
+          <div id="custom-handle" class="ui-slider-handle"></div>
+        </div>
+        <input class="c-data" id="c-max" value="10" title="Enter a maximum value for c"></input>
+      </div>
+
     </div>
 
     <div id="window-modal" style="display:none;">
@@ -73,21 +83,6 @@
 
 
     <div class="else">
-
-
-      <button id="draw-graph">Animate graph</button>
-      c min<input class="c-data" id="c-min" value="-10"></input>
-      c max<input class="c-data" id="c-max" value="10"></input>
-
-      <div id="c-value"></div>
-      <div id="slider">
-        <div id="custom-handle" class="ui-slider-handle"></div>
-      </div>
-
-
-
-
-
       <input id='colorpicker' />
       <input type='checkbox' id="randomColor"/> Random Colors
       <!-- <input type='checkbox' id="hide-graph"/> Hide -->
