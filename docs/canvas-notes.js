@@ -144,15 +144,8 @@ use request animation frame and a t variable to constantly replot while changing
 
 # ideas
 
-get online through github
 draw polar spiral
 
-refactor into classes
-
-the coordinate plane is an object
-each graph is an object
-
 draw with lines or dots
-make it draw and render latex right away
 
-add other lines besides axes
+add other lines besides axes - be able to turn grid on and off

@@ -264,6 +264,7 @@
 	      var cMaxVal = parseFloat(document.getElementById('c-max').value);
 	      $("#slider").slider("option", "min", cMinVal);
 	      $("#slider").slider("option", "max", cMaxVal);
+	      $("#slider").slider("option", "step", (cMaxVal - cMinVal) / 50);
 	    }
 	  }, {
 	    key: 'dragUpdate',
@@ -586,6 +587,15 @@
 	
 	      $('#trace-mode' + this.num).on("click", function () {
 	        that.traceMode = !that.traceMode;
+	        if ($('#trace-mode' + _this.num)[0].checked) {
+	          that.plane.equations.forEach(function (eq) {
+	            if (eq.num !== _this.num) {
+	              $('#trace-mode' + eq.num)[0].checked = false;
+	              eq.traceMode = false;
+	            }
+	          });
+	        }
+	
 	        that.plane.logAllEquations();
 	      });
 	    }

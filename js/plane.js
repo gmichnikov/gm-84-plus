@@ -140,6 +140,7 @@ class Plane {
     let cMaxVal = parseFloat(document.getElementById('c-max').value);
     $( "#slider" ).slider( "option", "min", cMinVal );
     $( "#slider" ).slider( "option", "max", cMaxVal );
+    $( "#slider" ).slider( "option", "step", (cMaxVal - cMinVal)/50 );
   }
 
   dragUpdate() {
