@@ -127,6 +127,7 @@
 	    this.equation1 = new _equation2.default(1, this, 'black');
 	    this.equation2 = new _equation2.default(2, this, 'violet');
 	    this.equations = [this.equation1, this.equation2];
+	    this.axesDrawn = false;
 	  }
 	
 	  _createClass(Plane, [{
@@ -167,6 +168,9 @@
 	      });
 	      $('.c-data').on("input", function () {
 	        return _this.adjustSliderBounds();
+	      });
+	      $('#draw-graph').on("click", function () {
+	        return _this.animateGraphNow();
 	      });
 	
 	      $(function () {
@@ -210,7 +214,7 @@
 	        that.mouseY = UTIL.calcYCoord(that.mouseYPixel, that.canvas, that);
 	
 	        if (that.equation1.traceMode) {
-	          var scope = { x: that.mouseX, c: that.equation1.c };
+	          var scope = { x: that.mouseX, c: that.c };
 	          var yCoord = math.format(that.equation1.compiledExpr.eval(scope));
 	          var yPixel = UTIL.calcYPixel(parseFloat(yCoord), that.canvas, that);
 	          var ctx = that.ctx;
@@ -240,9 +244,17 @@
 	  }, {
 	    key: 'logAllEquations',
 	    value: function logAllEquations() {
+	      var allHidden = true;
 	      this.equations.forEach(function (eq) {
-	        eq.logEquation();
+	        if (!eq.hidden) {
+	          allHidden = false;
+	          eq.logEquation();
+	        }
 	      });
+	      if (allHidden) {
+	        this.drawAxes();
+	      }
+	      this.axesDrawn = false;
 	    }
 	  }, {
 	    key: 'adjustSliderBounds',
@@ -404,6 +416,61 @@
 	      this.ctx.fillText(math.round(this.xMin, 1), xMinTextWidth / 2, this.xAxisPixelsDown + 7);
 	      this.ctx.fillText(math.round(this.xMax, 1), this.canvas.width - xMaxTextWidth / 2, this.xAxisPixelsDown + 7);
 	    }
+	  }, {
+	    key: 'animateGraphNow',
+	    value: function animateGraphNow() {
+	      var that = this;
+	      var colorpicker = document.getElementById('colorpicker' + this.num);
+	
+	      var drawButton = document.getElementById('draw-graph');
+	      drawButton.disabled = true;
+	
+	      var expr = document.getElementById('expression' + this.num);
+	
+	      try {
+	        var node = math.parse(expr.value);
+	        var compiledExpr = node.compile();
+	        that.compiledExpr = compiledExpr;
+	        that.animateGraph(compiledExpr);
+	      } catch (err) {}
+	    }
+	  }, {
+	    key: 'animateGraph',
+	    value: function animateGraph(compiledExpr) {
+	      var that = this;
+	      var cMinVal = parseFloat(document.getElementById('c-min').value);
+	      var cMaxVal = parseFloat(document.getElementById('c-max').value);
+	      if (cMaxVal <= cMinVal) {
+	        cMaxVal = cMinVal + 20;
+	        document.getElementById('c-max').value = cMaxVal;
+	      }
+	      var cIncrementVal = (cMaxVal - cMinVal) / 50;
+	
+	      var c = cMinVal;
+	
+	      function step() {
+	        if (!that.plane.axesDrawn) {
+	          console.log("drawing axes");
+	          that.plane.drawAxes();
+	          that.plane.axesDrawn = true;
+	        }
+	        // drawParabola(c)
+	        // drawSin(c)
+	
+	        that.drawAnything(compiledExpr, c);
+	        $("#slider").slider("value", c);
+	        $("#custom-handle").text(c);
+	
+	        c = math.round(c + cIncrementVal, 2);
+	        if (c <= cMaxVal) {
+	          window.requestAnimationFrame(step);
+	        } else {
+	          var drawButton = document.getElementById('draw-graph');
+	          drawButton.disabled = false;
+	        }
+	      }
+	      window.requestAnimationFrame(step);
+	    }
 	  }]);
 	
 	  return Plane;
@@ -470,23 +537,33 @@
 	      $('#randomColor' + this.num).on("change", function () {
 	        return _this.plane.logAllEquations();
 	      });
-	      $('#draw-graph').on("click", function () {
-	        return _this.animateGraphNow();
-	      });
 	      $('.trigger-redraw').on("input", function () {
 	        return _this.plane.logAllEquations();
+	      });
+	      $('#hide-graph' + this.num).on("change", function () {
+	        return _this.toggleHide();
 	      });
 	
 	      $('#trace-mode' + this.num).on("click", function () {
 	        that.traceMode = !that.traceMode;
-	        that.logAllEquations();
+	        that.plane.logAllEquations();
 	      });
+	    }
+	  }, {
+	    key: 'toggleHide',
+	    value: function toggleHide() {
+	      this.hidden = !this.hidden;
+	      console.log(this.hidden);
+	      this.plane.logAllEquations();
 	    }
 	  }, {
 	    key: 'drawGraphOnce',
 	    value: function drawGraphOnce(compiledExpr) {
-	      if (this.num === 1) {
+	      console.log(this.plane.axesDrawn);
+	      if (!this.plane.axesDrawn) {
+	        console.log("drawing axes drawgraphonce");
 	        this.plane.drawAxes();
+	        this.plane.axesDrawn = true;
 	      }
 	      this.drawAnything(compiledExpr, this.plane.c);
 	    }
@@ -509,6 +586,7 @@
 	        var compiledExpr = node.compile();
 	        that.compiledExpr = compiledExpr;
 	        that.drawGraphOnce(compiledExpr, that.plane.c);
+	        console.log("tried to draw");
 	      } catch (err) {
 	        console.log(err.toString());
 	      }
@@ -525,59 +603,6 @@
 	      } catch (err) {
 	        console.log("latex error");
 	      }
-	    }
-	  }, {
-	    key: 'animateGraphNow',
-	    value: function animateGraphNow() {
-	      var that = this;
-	      var colorpicker = document.getElementById('colorpicker' + this.num);
-	
-	      var drawButton = document.getElementById('draw-graph');
-	      drawButton.disabled = true;
-	
-	      var expr = document.getElementById('expression' + this.num);
-	
-	      try {
-	        var node = math.parse(expr.value);
-	        var compiledExpr = node.compile();
-	        that.compiledExpr = compiledExpr;
-	        that.animateGraph(compiledExpr);
-	      } catch (err) {}
-	    }
-	  }, {
-	    key: 'animateGraph',
-	    value: function animateGraph(compiledExpr) {
-	      var that = this;
-	      var cMinVal = parseFloat(document.getElementById('c-min').value);
-	      var cMaxVal = parseFloat(document.getElementById('c-max').value);
-	      if (cMaxVal <= cMinVal) {
-	        cMaxVal = cMinVal + 20;
-	        document.getElementById('c-max').value = cMaxVal;
-	      }
-	      var cIncrementVal = (cMaxVal - cMinVal) / 50;
-	
-	      var c = cMinVal;
-	
-	      function step() {
-	        if (that.num === 1) {
-	          that.plane.drawAxes();
-	        }
-	        // drawParabola(c)
-	        // drawSin(c)
-	
-	        that.drawAnything(compiledExpr, c);
-	        $("#slider").slider("value", c);
-	        $("#custom-handle").text(c);
-	
-	        c = math.round(c + cIncrementVal, 2);
-	        if (c <= cMaxVal) {
-	          window.requestAnimationFrame(step);
-	        } else {
-	          var drawButton = document.getElementById('draw-graph');
-	          drawButton.disabled = false;
-	        }
-	      }
-	      window.requestAnimationFrame(step);
 	    }
 	  }, {
 	    key: 'drawAnything',

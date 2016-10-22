@@ -29,19 +29,29 @@ class Equation {
     let that = this;
 
     $(`#randomColor${this.num}`).on("change", () => this.plane.logAllEquations());
-    $('#draw-graph').on("click", () => this.animateGraphNow());
     $('.trigger-redraw').on("input", () => this.plane.logAllEquations());
+    $(`#hide-graph${this.num}`).on("change", () => this.toggleHide());
 
     $(`#trace-mode${this.num}`).on("click", () => {
       that.traceMode = !that.traceMode;
-      that.logAllEquations();
+      that.plane.logAllEquations();
     });
 
   }
 
+  toggleHide() {
+    this.hidden = !this.hidden;
+    console.log(this.hidden);
+    this.plane.logAllEquations();
+  }
+
+
   drawGraphOnce(compiledExpr) {
-    if (this.num === 1) {
+    console.log(this.plane.axesDrawn);
+    if (!this.plane.axesDrawn) {
+      console.log("drawing axes drawgraphonce");
       this.plane.drawAxes();
+      this.plane.axesDrawn = true;
     }
     this.drawAnything(compiledExpr, this.plane.c);
   }
@@ -63,6 +73,7 @@ class Equation {
       let compiledExpr = node.compile();
       that.compiledExpr = compiledExpr;
       that.drawGraphOnce(compiledExpr, that.plane.c);
+      console.log("tried to draw");
     }
     catch (err) {
       console.log(err.toString());
@@ -83,61 +94,6 @@ class Equation {
     }
   }
 
-
-
-  animateGraphNow() {
-    let that = this;
-    let colorpicker = document.getElementById(`colorpicker${this.num}`);
-
-    let drawButton = document.getElementById('draw-graph');
-    drawButton.disabled = true;
-
-    let expr = document.getElementById(`expression${this.num}`);
-
-    try {
-      let node = math.parse(expr.value);
-      let compiledExpr = node.compile();
-      that.compiledExpr = compiledExpr;
-      that.animateGraph(compiledExpr);
-    }
-    catch (err) {
-    }
-  }
-
-
-  animateGraph(compiledExpr) {
-    let that = this;
-    let cMinVal = parseFloat(document.getElementById('c-min').value);
-    let cMaxVal = parseFloat(document.getElementById('c-max').value);
-    if ( cMaxVal <= cMinVal ) {
-      cMaxVal = cMinVal + 20;
-      document.getElementById('c-max').value = cMaxVal;
-    }
-    let cIncrementVal = (cMaxVal - cMinVal) / 50;
-
-    let c = cMinVal;
-
-    function step() {
-      if(that.num === 1) {
-        that.plane.drawAxes();
-      }
-      // drawParabola(c)
-      // drawSin(c)
-
-      that.drawAnything(compiledExpr, c);
-      $( "#slider" ).slider( "value", c );
-      $( "#custom-handle" ).text(c);
-
-      c = math.round(c + cIncrementVal, 2);
-      if (c <= cMaxVal) {
-        window.requestAnimationFrame(step);
-      } else {
-        let drawButton = document.getElementById('draw-graph');
-        drawButton.disabled = false;
-      }
-    }
-    window.requestAnimationFrame(step);
-  }
 
   drawAnything(compiledExpr, c) {
     let ctx = this.plane.ctx;

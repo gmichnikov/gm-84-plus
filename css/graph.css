@@ -186,7 +186,7 @@ canvas:active {
   height: 566px;
   background-color: rgb(190, 210, 204);
   border: 5px solid black;
-  padding: 5px;
+  padding: 0 5px;
 }
 
 .hide-equations {
@@ -200,7 +200,7 @@ canvas:active {
 }
 
 
-#expression {
+.expression {
   background-color: white;
   padding: 3px;
   border-radius: 5px;
@@ -208,6 +208,7 @@ canvas:active {
 }
 
 .equation {
+  padding-top: 5px;
   border-bottom: 5px solid black;
 }
 
@@ -219,6 +220,6 @@ canvas:active {
   margin-bottom: 10px;
 }
 
-#pretty1 {
+.pretty {
   margin-top: 10px;
 }

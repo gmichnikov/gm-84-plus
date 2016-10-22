@@ -31,6 +31,8 @@ class Plane {
     this.equation1 = new Equation(1, this, 'black');
     this.equation2 = new Equation(2, this, 'violet');
     this.equations = [this.equation1, this.equation2];
+    this.axesDrawn = false;
+
   }
 
   bindEvents() {
@@ -46,6 +48,8 @@ class Plane {
     $('#pan-down').on("click", () => this.pan("down"));
     $('.y-equals-hider').on("click", () => $('.equations').toggleClass('hide-equations'));
     $('.c-data').on("input", () => this.adjustSliderBounds());
+    $('#draw-graph').on("click", () => this.animateGraphNow());
+
 
     $( function() {
       var handle = $( "#custom-handle" );
@@ -89,7 +93,7 @@ class Plane {
       that.mouseY = UTIL.calcYCoord(that.mouseYPixel, that.canvas, that);
 
       if (that.equation1.traceMode) {
-        let scope = { x: that.mouseX, c: that.equation1.c };
+        let scope = { x: that.mouseX, c: that.c };
         let yCoord = math.format(that.equation1.compiledExpr.eval(scope));
         let yPixel = UTIL.calcYPixel(parseFloat(yCoord), that.canvas, that);
         let ctx = that.ctx;
@@ -117,10 +121,17 @@ class Plane {
   }
 
   logAllEquations() {
+    let allHidden = true;
     this.equations.forEach((eq) => {
-      eq.logEquation();
+      if (!eq.hidden) {
+        allHidden = false;
+        eq.logEquation();
+      }
     });
-
+    if (allHidden) {
+      this.drawAxes();
+    }
+    this.axesDrawn = false;
   }
 
   adjustSliderBounds() {
@@ -266,6 +277,62 @@ class Plane {
     this.ctx.fillText(math.round(this.yMin, 1), this.yAxisPixelsOver, yMinLabelHeight);
     this.ctx.fillText(math.round(this.xMin, 1), xMinTextWidth/2, this.xAxisPixelsDown + 7);
     this.ctx.fillText(math.round(this.xMax, 1), this.canvas.width - xMaxTextWidth/2, this.xAxisPixelsDown + 7);
+  }
+
+
+  animateGraphNow() {
+    let that = this;
+    let colorpicker = document.getElementById(`colorpicker${this.num}`);
+
+    let drawButton = document.getElementById('draw-graph');
+    drawButton.disabled = true;
+
+    let expr = document.getElementById(`expression${this.num}`);
+
+    try {
+      let node = math.parse(expr.value);
+      let compiledExpr = node.compile();
+      that.compiledExpr = compiledExpr;
+      that.animateGraph(compiledExpr);
+    }
+    catch (err) {
+    }
+  }
+
+  animateGraph(compiledExpr) {
+    let that = this;
+    let cMinVal = parseFloat(document.getElementById('c-min').value);
+    let cMaxVal = parseFloat(document.getElementById('c-max').value);
+    if ( cMaxVal <= cMinVal ) {
+      cMaxVal = cMinVal + 20;
+      document.getElementById('c-max').value = cMaxVal;
+    }
+    let cIncrementVal = (cMaxVal - cMinVal) / 50;
+
+    let c = cMinVal;
+
+    function step() {
+      if(!that.plane.axesDrawn) {
+        console.log("drawing axes");
+        that.plane.drawAxes();
+        that.plane.axesDrawn = true;
+      }
+      // drawParabola(c)
+      // drawSin(c)
+
+      that.drawAnything(compiledExpr, c);
+      $( "#slider" ).slider( "value", c );
+      $( "#custom-handle" ).text(c);
+
+      c = math.round(c + cIncrementVal, 2);
+      if (c <= cMaxVal) {
+        window.requestAnimationFrame(step);
+      } else {
+        let drawButton = document.getElementById('draw-graph');
+        drawButton.disabled = false;
+      }
+    }
+    window.requestAnimationFrame(step);
   }
 
 }
