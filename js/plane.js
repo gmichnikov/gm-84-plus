@@ -32,6 +32,7 @@ class Plane {
     this.equation2 = new Equation(2, this, 'violet');
     this.equations = [this.equation1, this.equation2];
     this.axesDrawn = false;
+    this.tracing = false;
 
   }
 
@@ -92,13 +93,18 @@ class Plane {
       that.mouseX = UTIL.calcXCoord(that.mouseXPixel, that.canvas, that);
       that.mouseY = UTIL.calcYCoord(that.mouseYPixel, that.canvas, that);
 
-      if (that.equation1.traceMode) {
+      if (that.tracing) {
+
+        let equation = that.equations.find((eq) => {
+          return eq.traceMode;
+        });
+
         let scope = { x: that.mouseX, c: that.c };
-        let yCoord = math.format(that.equation1.compiledExpr.eval(scope));
+        let yCoord = math.format(equation.compiledExpr.eval(scope));
         let yPixel = UTIL.calcYPixel(parseFloat(yCoord), that.canvas, that);
         let ctx = that.ctx;
 
-        that.equation1.logEquation();
+        equation.logEquation();
         ctx.beginPath();
         ctx.arc(that.mouseXPixel, yPixel, 10, 0, Math.PI*2);
         ctx.fillStyle = "yellow";

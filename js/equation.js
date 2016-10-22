@@ -35,12 +35,15 @@ class Equation {
     $(`#trace-mode${this.num}`).on("click", () => {
       that.traceMode = !that.traceMode;
       if($(`#trace-mode${this.num}`)[0].checked) {
+        that.plane.tracing = true;
         that.plane.equations.forEach((eq) => {
           if (eq.num !== this.num) {
             $(`#trace-mode${eq.num}`)[0].checked = false;
             eq.traceMode = false;
           }
         });
+      } else {
+        that.plane.tracing = false;
       }
 
       that.plane.logAllEquations();

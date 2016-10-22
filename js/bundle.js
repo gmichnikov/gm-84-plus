@@ -128,6 +128,7 @@
 	    this.equation2 = new _equation2.default(2, this, 'violet');
 	    this.equations = [this.equation1, this.equation2];
 	    this.axesDrawn = false;
+	    this.tracing = false;
 	  }
 	
 	  _createClass(Plane, [{
@@ -213,13 +214,18 @@
 	        that.mouseX = UTIL.calcXCoord(that.mouseXPixel, that.canvas, that);
 	        that.mouseY = UTIL.calcYCoord(that.mouseYPixel, that.canvas, that);
 	
-	        if (that.equation1.traceMode) {
+	        if (that.tracing) {
+	
+	          var equation = that.equations.find(function (eq) {
+	            return eq.traceMode;
+	          });
+	
 	          var scope = { x: that.mouseX, c: that.c };
-	          var yCoord = math.format(that.equation1.compiledExpr.eval(scope));
+	          var yCoord = math.format(equation.compiledExpr.eval(scope));
 	          var yPixel = UTIL.calcYPixel(parseFloat(yCoord), that.canvas, that);
 	          var ctx = that.ctx;
 	
-	          that.equation1.logEquation();
+	          equation.logEquation();
 	          ctx.beginPath();
 	          ctx.arc(that.mouseXPixel, yPixel, 10, 0, Math.PI * 2);
 	          ctx.fillStyle = "yellow";
@@ -588,12 +594,15 @@
 	      $('#trace-mode' + this.num).on("click", function () {
 	        that.traceMode = !that.traceMode;
 	        if ($('#trace-mode' + _this.num)[0].checked) {
+	          that.plane.tracing = true;
 	          that.plane.equations.forEach(function (eq) {
 	            if (eq.num !== _this.num) {
 	              $('#trace-mode' + eq.num)[0].checked = false;
 	              eq.traceMode = false;
 	            }
 	          });
+	        } else {
+	          that.plane.tracing = false;
 	        }
 	
 	        that.plane.logAllEquations();
