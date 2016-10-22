@@ -122,7 +122,10 @@
 	    this.updateAxisLocations();
 	    this.bindEvents();
 	
-	    this.equation = new _equation2.default(this, 'violet');
+	    this.c = 0;
+	
+	    this.equation1 = new _equation2.default(1, this, 'black');
+	    this.equation2 = new _equation2.default(2, this, 'violet');
 	  }
 	
 	  _createClass(Plane, [{
@@ -158,9 +161,31 @@
 	      $('#pan-down').on("click", function () {
 	        return _this.pan("down");
 	      });
-	      $('.equation-hider').on("click", function () {
+	      $('.y-equals-hider').on("click", function () {
 	        return $('.equations').toggleClass('hide-equations');
 	      });
+	      $('.c-data').on("input", function () {
+	        return _this.adjustSliderBounds();
+	      });
+	
+	      $(function () {
+	        var handle = $("#custom-handle");
+	        $("#slider").slider({
+	          create: function create() {
+	            handle.text($(this).slider("value"));
+	          },
+	          slide: function slide(event, ui) {
+	            handle.text(ui.value);
+	            var c = parseFloat(ui.value);
+	            that.c = c;
+	            that.logEquation(c);
+	          },
+	          min: -10,
+	          max: 10,
+	          step: 0.4
+	        });
+	      });
+	
 	      $(window).bind('mousewheel', function (e) {
 	        if (e.originalEvent.wheelDelta / 120 > 0) {
 	          that.zoom("in");
@@ -183,13 +208,13 @@
 	        that.mouseX = UTIL.calcXCoord(that.mouseXPixel, that.canvas, that);
 	        that.mouseY = UTIL.calcYCoord(that.mouseYPixel, that.canvas, that);
 	
-	        if (that.equation.traceMode) {
-	          var scope = { x: that.mouseX, c: that.equation.c };
-	          var yCoord = math.format(that.equation.compiledExpr.eval(scope));
+	        if (that.equation1.traceMode) {
+	          var scope = { x: that.mouseX, c: that.equation1.c };
+	          var yCoord = math.format(that.equation1.compiledExpr.eval(scope));
 	          var yPixel = UTIL.calcYPixel(parseFloat(yCoord), that.canvas, that);
 	          var ctx = that.ctx;
 	
-	          that.equation.logEquation();
+	          that.equation1.logEquation();
 	          ctx.beginPath();
 	          ctx.arc(that.mouseXPixel, yPixel, 10, 0, Math.PI * 2);
 	          ctx.fillStyle = "yellow";
@@ -210,6 +235,14 @@
 	      window.requestAnimationFrame(function () {
 	        return _this.dragUpdate();
 	      });
+	    }
+	  }, {
+	    key: 'adjustSliderBounds',
+	    value: function adjustSliderBounds() {
+	      var cMinVal = parseFloat(document.getElementById('c-min').value);
+	      var cMaxVal = parseFloat(document.getElementById('c-max').value);
+	      $("#slider").slider("option", "min", cMinVal);
+	      $("#slider").slider("option", "max", cMaxVal);
 	    }
 	  }, {
 	    key: 'dragUpdate',
@@ -311,7 +344,7 @@
 	      this.yMin = parseFloat(document.getElementById('window-y-min').value);
 	      this.yMax = parseFloat(document.getElementById('window-y-max').value);
 	      this.updateAxisLocations();
-	      this.equation.logEquation();
+	      this.equation1.logEquation();
 	    }
 	  }, {
 	    key: 'resetWindow',
@@ -392,13 +425,13 @@
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
 	var Equation = function () {
-	  function Equation(plane, startingColor) {
+	  function Equation(num, plane, startingColor) {
 	    _classCallCheck(this, Equation);
 	
+	    this.num = num;
 	    this.plane = plane;
 	    this.traceMode = false;
 	    this.compiledExpr = null;
-	    this.c = 0;
 	    this.startingColor = startingColor;
 	    this.hidden = false;
 	
@@ -413,7 +446,7 @@
 	    value: function setup(startingColor) {
 	      var _this = this;
 	
-	      $("#colorpicker").spectrum({
+	      $('#colorpicker' + this.num).spectrum({
 	        showPaletteOnly: true,
 	        showPalette: true,
 	        hideAfterPaletteSelect: true,
@@ -426,7 +459,7 @@
 	
 	      var that = this;
 	
-	      $("#randomColor").on("change", function () {
+	      $('#randomColor' + this.num).on("change", function () {
 	        return _this.logEquation();
 	      });
 	      $('#draw-graph').on("click", function () {
@@ -435,46 +468,17 @@
 	      $('.trigger-redraw').on("input", function () {
 	        return _this.logEquation();
 	      });
-	      $('.c-data').on("input", function () {
-	        return _this.adjustSliderBounds();
-	      });
 	
-	      $('#trace-mode').on("click", function () {
+	      $('#trace-mode' + this.num).on("click", function () {
 	        that.traceMode = !that.traceMode;
 	        that.logEquation();
-	      });
-	
-	      $(function () {
-	        var handle = $("#custom-handle");
-	        $("#slider").slider({
-	          create: function create() {
-	            handle.text($(this).slider("value"));
-	          },
-	          slide: function slide(event, ui) {
-	            handle.text(ui.value);
-	            var c = parseFloat(ui.value);
-	            that.c = c;
-	            that.logEquation(c);
-	          },
-	          min: -10,
-	          max: 10,
-	          step: 0.4
-	        });
 	      });
 	    }
 	  }, {
 	    key: 'drawGraphOnce',
 	    value: function drawGraphOnce(compiledExpr) {
 	      this.plane.drawAxes();
-	      this.drawAnything(compiledExpr, this.c);
-	    }
-	  }, {
-	    key: 'adjustSliderBounds',
-	    value: function adjustSliderBounds() {
-	      var cMinVal = parseFloat(document.getElementById('c-min').value);
-	      var cMaxVal = parseFloat(document.getElementById('c-max').value);
-	      $("#slider").slider("option", "min", cMinVal);
-	      $("#slider").slider("option", "max", cMaxVal);
+	      this.drawAnything(compiledExpr, this.plane.c);
 	    }
 	  }, {
 	    key: 'logEquation',
@@ -485,8 +489,8 @@
 	        that.c = 0;
 	      }
 	
-	      var expr = document.getElementById('expression');
-	      var pretty = document.getElementById('pretty');
+	      var expr = document.getElementById('expression' + this.num);
+	      var pretty = document.getElementById('pretty' + this.num);
 	
 	      var node = null;
 	
@@ -494,7 +498,7 @@
 	        node = math.parse(expr.value);
 	        var compiledExpr = node.compile();
 	        that.compiledExpr = compiledExpr;
-	        that.drawGraphOnce(compiledExpr, that.c);
+	        that.drawGraphOnce(compiledExpr, that.plane.c);
 	      } catch (err) {
 	        console.log(err.toString());
 	      }
@@ -503,7 +507,7 @@
 	        var nodeWithY = math.parse('Y==' + expr.value);
 	
 	        var latex = nodeWithY ? nodeWithY.toTex({ implicit: 'show' }) : '';
-	        var elem = MathJax.Hub.getAllJax('pretty')[0];
+	        var elem = MathJax.Hub.getAllJax('pretty' + this.num)[0];
 	        if (!elem) {
 	          pretty.innerHTML = '$$' + nodeWithY.toTex() + '$$';
 	        }
@@ -516,12 +520,12 @@
 	    key: 'animateGraphNow',
 	    value: function animateGraphNow() {
 	      var that = this;
-	      var colorpicker = document.getElementById('colorpicker');
+	      var colorpicker = document.getElementById('colorpicker' + this.num);
 	
 	      var drawButton = document.getElementById('draw-graph');
 	      drawButton.disabled = true;
 	
-	      var expr = document.getElementById('expression');
+	      var expr = document.getElementById('expression' + this.num);
 	
 	      try {
 	        var node = math.parse(expr.value);
@@ -569,8 +573,8 @@
 	      var ctx = this.plane.ctx;
 	      var canvas = this.plane.ctx.canvas;
 	      ctx.fillStyle = this.startingColor;
-	      var chooseRandom = document.getElementById("randomColor").checked;
-	      var selectedColor = $("#colorpicker").spectrum("get");
+	      var chooseRandom = document.getElementById('randomColor' + this.num).checked;
+	      var selectedColor = $('#colorpicker' + this.num).spectrum("get");
 	      var that = this;
 	
 	      for (var xPixel = 0; xPixel < canvas.width; xPixel++) {

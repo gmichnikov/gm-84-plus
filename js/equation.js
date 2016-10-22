@@ -2,11 +2,11 @@
 import * as UTIL from './util';
 
 class Equation {
-  constructor(plane, startingColor) {
+  constructor(num, plane, startingColor) {
+    this.num = num;
     this.plane = plane;
     this.traceMode = false;
     this.compiledExpr = null;
-    this.c = 0;
     this.startingColor = startingColor;
     this.hidden = false;
 
@@ -17,7 +17,7 @@ class Equation {
   }
 
   setup(startingColor) {
-    $("#colorpicker").spectrum({
+    $(`#colorpicker${this.num}`).spectrum({
       showPaletteOnly: true,
       showPalette:true,
       hideAfterPaletteSelect:true,
@@ -28,46 +28,22 @@ class Equation {
 
     let that = this;
 
-    $("#randomColor").on("change", () => this.logEquation());
+    $(`#randomColor${this.num}`).on("change", () => this.logEquation());
     $('#draw-graph').on("click", () => this.animateGraphNow());
     $('.trigger-redraw').on("input", () => this.logEquation());
-    $('.c-data').on("input", () => this.adjustSliderBounds());
 
-    $('#trace-mode').on("click", () => {
+    $(`#trace-mode${this.num}`).on("click", () => {
       that.traceMode = !that.traceMode;
       that.logEquation();
     });
 
-    $( function() {
-      var handle = $( "#custom-handle" );
-      $( "#slider" ).slider({
-        create: function() {
-          handle.text( $( this ).slider( "value" ) );
-        },
-        slide: function( event, ui ) {
-          handle.text( ui.value );
-          let c = parseFloat(ui.value);
-          that.c = c;
-          that.logEquation(c);
-        },
-        min: -10,
-        max: 10,
-        step: 0.4
-      });
-    } );
   }
 
   drawGraphOnce(compiledExpr) {
     this.plane.drawAxes();
-    this.drawAnything(compiledExpr, this.c);
+    this.drawAnything(compiledExpr, this.plane.c);
   }
 
-  adjustSliderBounds() {
-    let cMinVal = parseFloat(document.getElementById('c-min').value);
-    let cMaxVal = parseFloat(document.getElementById('c-max').value);
-    $( "#slider" ).slider( "option", "min", cMinVal );
-    $( "#slider" ).slider( "option", "max", cMaxVal );
-  }
 
   logEquation() { // called on input in forms
     let that = this;
@@ -75,8 +51,8 @@ class Equation {
       that.c = 0;
     }
 
-    let expr = document.getElementById('expression');
-    let pretty = document.getElementById('pretty');
+    let expr = document.getElementById(`expression${this.num}`);
+    let pretty = document.getElementById(`pretty${this.num}`);
 
     let node = null;
 
@@ -84,7 +60,7 @@ class Equation {
       node = math.parse(expr.value);
       let compiledExpr = node.compile();
       that.compiledExpr = compiledExpr;
-      that.drawGraphOnce(compiledExpr, that.c);
+      that.drawGraphOnce(compiledExpr, that.plane.c);
     }
     catch (err) {
       console.log(err.toString());
@@ -94,7 +70,7 @@ class Equation {
       let nodeWithY = math.parse(`Y==${expr.value}`);
 
       let latex = nodeWithY ? nodeWithY.toTex({implicit:'show'}) : '';
-      let elem = MathJax.Hub.getAllJax('pretty')[0];
+      let elem = MathJax.Hub.getAllJax(`pretty${this.num}`)[0];
       if (!elem) {
         pretty.innerHTML = '$$' + nodeWithY.toTex() + '$$';
       }
@@ -109,12 +85,12 @@ class Equation {
 
   animateGraphNow() {
     let that = this;
-    let colorpicker = document.getElementById('colorpicker');
+    let colorpicker = document.getElementById(`colorpicker${this.num}`);
 
     let drawButton = document.getElementById('draw-graph');
     drawButton.disabled = true;
 
-    let expr = document.getElementById('expression');
+    let expr = document.getElementById(`expression${this.num}`);
 
     try {
       let node = math.parse(expr.value);
@@ -163,8 +139,8 @@ class Equation {
     let ctx = this.plane.ctx;
     let canvas = this.plane.ctx.canvas;
     ctx.fillStyle = this.startingColor;
-    let chooseRandom = document.getElementById("randomColor").checked;
-    let selectedColor = $("#colorpicker").spectrum("get");
+    let chooseRandom = document.getElementById(`randomColor${this.num}`).checked;
+    let selectedColor = $(`#colorpicker${this.num}`).spectrum("get");
     let that = this;
 
     for (var xPixel = 0; xPixel < canvas.width; xPixel++) {

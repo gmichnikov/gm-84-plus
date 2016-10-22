@@ -26,7 +26,10 @@ class Plane {
     this.updateAxisLocations();
     this.bindEvents();
 
-    this.equation = new Equation(this, 'violet');
+    this.c = 0;
+
+    this.equation1 = new Equation(1, this, 'black');
+    this.equation2 = new Equation(2, this, 'violet');
   }
 
   bindEvents() {
@@ -40,7 +43,27 @@ class Plane {
     $('#pan-right').on("click", () => this.pan("right"));
     $('#pan-up').on("click", () => this.pan("up"));
     $('#pan-down').on("click", () => this.pan("down"));
-    $('.equation-hider').on("click", () => $('.equations').toggleClass('hide-equations'));
+    $('.y-equals-hider').on("click", () => $('.equations').toggleClass('hide-equations'));
+    $('.c-data').on("input", () => this.adjustSliderBounds());
+
+    $( function() {
+      var handle = $( "#custom-handle" );
+      $( "#slider" ).slider({
+        create: function() {
+          handle.text( $( this ).slider( "value" ) );
+        },
+        slide: function( event, ui ) {
+          handle.text( ui.value );
+          let c = parseFloat(ui.value);
+          that.c = c;
+          that.logEquation(c);
+        },
+        min: -10,
+        max: 10,
+        step: 0.4
+      });
+    } );
+
     $(window).bind('mousewheel', function(e){
       if(e.originalEvent.wheelDelta /120 > 0) {
         that.zoom("in");
@@ -64,13 +87,13 @@ class Plane {
       that.mouseX = UTIL.calcXCoord(that.mouseXPixel, that.canvas, that);
       that.mouseY = UTIL.calcYCoord(that.mouseYPixel, that.canvas, that);
 
-      if (that.equation.traceMode) {
-        let scope = { x: that.mouseX, c: that.equation.c };
-        let yCoord = math.format(that.equation.compiledExpr.eval(scope));
+      if (that.equation1.traceMode) {
+        let scope = { x: that.mouseX, c: that.equation1.c };
+        let yCoord = math.format(that.equation1.compiledExpr.eval(scope));
         let yPixel = UTIL.calcYPixel(parseFloat(yCoord), that.canvas, that);
         let ctx = that.ctx;
 
-        that.equation.logEquation();
+        that.equation1.logEquation();
         ctx.beginPath();
         ctx.arc(that.mouseXPixel, yPixel, 10, 0, Math.PI*2);
         ctx.fillStyle = "yellow";
@@ -90,6 +113,13 @@ class Plane {
 
     window.requestAnimationFrame(() => this.dragUpdate());
 
+  }
+
+  adjustSliderBounds() {
+    let cMinVal = parseFloat(document.getElementById('c-min').value);
+    let cMaxVal = parseFloat(document.getElementById('c-max').value);
+    $( "#slider" ).slider( "option", "min", cMinVal );
+    $( "#slider" ).slider( "option", "max", cMaxVal );
   }
 
   dragUpdate() {
@@ -179,7 +209,7 @@ class Plane {
     this.yMin = parseFloat(document.getElementById('window-y-min').value);
     this.yMax = parseFloat(document.getElementById('window-y-max').value);
     this.updateAxisLocations();
-    this.equation.logEquation();
+    this.equation1.logEquation();
   }
 
   resetWindow(xMin, xMax, yMin, yMax) {

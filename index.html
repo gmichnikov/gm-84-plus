@@ -48,7 +48,7 @@
       <canvas id="myCanvas" width="560" height="350"></canvas>
 
       <div class="plane-controls">
-        <a class="equation-hider" title="Show/Hide equation editor">Y=</a>
+        <a class="y-equals-hider" title="Show/Hide equation editor">Y=</a>
         <a class="zoom-option" id="reset-window-standard" title="Resets window to X(-10, 10)  and Y(-10, 10)">Z-Standard</a>
         <a class="zoom-option" id="reset-window-square" title="Resets window to X(-16, 16)  and Y(-10, 10), which maintains xy proportions">Z-Square</a>
         <a id="draw-graph" title="Redraws the graphs as c moves from the minimum to the maximum set below (only graphs of expressions containing c will change)" >Animate</a>
@@ -73,19 +73,42 @@
 
       <div class="equations">
         <div class="equation">
-          <label>Y = </label>
-          <input id="expression" class="trigger-redraw" value="x * (c + 1) * sin(x + c)"/>
+          <label>Y1 = </label>
+          <input id="expression1" class="trigger-redraw" value="x * (c + 1) * sin(x + c)"/>
 
-          <span id="pretty">$$$$</span>
+          <span id="pretty1">$$$$</span>
 
-          <input id='colorpicker' />
-          <input type='checkbox' id="randomColor"/> Random
-          <input type='checkbox' id="hide-graph"/> Hide
+          <div class="color-row">
+            <input id='colorpicker1' />
+            <input type='checkbox' id="randomColor1"/> Random
+            <input type='checkbox' id="hide-graph1"/> Hide
+          </div>
 
-          <input type='checkbox' id="trace-mode"/> Trace Mode?
-
+          <div class="math-functions-row">
+            <input type='checkbox' id="trace-mode1"/> Trace Mode?
+          </div>
 
         </div>
+
+        <div class="equation">
+          <label>Y2 = </label>
+          <input id="expression2" class="trigger-redraw" value="x * (c + 1) * sin(x + c)"/>
+
+          <span id="pretty2">$$$$</span>
+
+          <div class="color-row">
+            <input id='colorpicker2' />
+            <input type='checkbox' id="randomColor2"/> Random
+            <input type='checkbox' id="hide-graph2"/> Hide
+          </div>
+
+          <div class="math-functions-row">
+            <input type='checkbox' id="trace-mode2"/> Trace Mode?
+          </div>
+
+        </div>
+
+
       </div>
 
     </div>

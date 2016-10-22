@@ -204,8 +204,21 @@ canvas:active {
   background-color: white;
   padding: 3px;
   border-radius: 5px;
+  margin-bottom: 10px;
 }
 
 .equation {
   border-bottom: 5px solid black;
+}
+
+.color-row {
+  margin: 10px 0;
+}
+
+.math-functions-row {
+  margin-bottom: 10px;
+}
+
+#pretty1 {
+  margin-top: 10px;
 }
