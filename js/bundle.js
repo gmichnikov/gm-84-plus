@@ -50,7 +50,7 @@
 	
 	var _plane2 = _interopRequireDefault(_plane);
 	
-	var _util = __webpack_require__(3);
+	var _util = __webpack_require__(2);
 	
 	var UTIL = _interopRequireWildcard(_util);
 	
@@ -76,11 +76,11 @@
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
-	var _equation = __webpack_require__(2);
+	var _equation = __webpack_require__(3);
 	
 	var _equation2 = _interopRequireDefault(_equation);
 	
-	var _util = __webpack_require__(3);
+	var _util = __webpack_require__(2);
 	
 	var UTIL = _interopRequireWildcard(_util);
 	
@@ -232,6 +232,7 @@
 	          var textWidth = ctx.measureText(text).width;
 	          ctx.fillStyle = "purple";
 	          ctx.fillText(text, 20, 20);
+	          that.axesDrawn = false;
 	        }
 	        // console.log(that.mouseXPixel, that.mouseYPixel);
 	        // console.log(that.mouseX, that.mouseY);
@@ -420,23 +421,22 @@
 	    key: 'animateGraphNow',
 	    value: function animateGraphNow() {
 	      var that = this;
-	      var colorpicker = document.getElementById('colorpicker' + this.num);
-	
-	      var drawButton = document.getElementById('draw-graph');
-	      drawButton.disabled = true;
-	
-	      var expr = document.getElementById('expression' + this.num);
+	      // let drawButton = document.getElementById('draw-graph');
+	      // drawButton.disabled = true;
 	
 	      try {
-	        var node = math.parse(expr.value);
-	        var compiledExpr = node.compile();
-	        that.compiledExpr = compiledExpr;
-	        that.animateGraph(compiledExpr);
+	        that.equations.forEach(function (eq) {
+	          var expr = document.getElementById('expression' + eq.num);
+	          var node = math.parse(expr.value);
+	          var compiledExpr = node.compile();
+	          eq.compiledExpr = compiledExpr;
+	        });
+	        that.animateAllGraphs();
 	      } catch (err) {}
 	    }
 	  }, {
-	    key: 'animateGraph',
-	    value: function animateGraph(compiledExpr) {
+	    key: 'animateAllGraphs',
+	    value: function animateAllGraphs() {
 	      var that = this;
 	      var cMinVal = parseFloat(document.getElementById('c-min').value);
 	      var cMaxVal = parseFloat(document.getElementById('c-max').value);
@@ -446,27 +446,30 @@
 	      }
 	      var cIncrementVal = (cMaxVal - cMinVal) / 50;
 	
-	      var c = cMinVal;
+	      that.c = cMinVal;
 	
 	      function step() {
-	        if (!that.plane.axesDrawn) {
-	          console.log("drawing axes");
-	          that.plane.drawAxes();
-	          that.plane.axesDrawn = true;
+	        if (!that.axesDrawn) {
+	          that.drawAxes();
+	          that.axesDrawn = true;
 	        }
 	        // drawParabola(c)
 	        // drawSin(c)
 	
-	        that.drawAnything(compiledExpr, c);
-	        $("#slider").slider("value", c);
-	        $("#custom-handle").text(c);
+	        that.equations.forEach(function (eq) {
+	          eq.drawAnything();
+	        });
+	        that.axesDrawn = false;
 	
-	        c = math.round(c + cIncrementVal, 2);
-	        if (c <= cMaxVal) {
+	        $("#slider").slider("value", that.c);
+	        $("#custom-handle").text(that.c);
+	
+	        that.c = math.round(that.c + cIncrementVal, 2);
+	        if (that.c <= cMaxVal) {
 	          window.requestAnimationFrame(step);
 	        } else {
-	          var drawButton = document.getElementById('draw-graph');
-	          drawButton.disabled = false;
+	          // let drawButton = document.getElementById('draw-graph');
+	          // drawButton.disabled = false;
 	        }
 	      }
 	      window.requestAnimationFrame(step);
@@ -480,6 +483,43 @@
 
 /***/ },
 /* 2 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var rand256 = exports.rand256 = function rand256() {
+	  return math.randomInt(0, 256);
+	};
+	
+	var randomColor = exports.randomColor = function randomColor() {
+	  var opacity = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
+	
+	  return "rgba(" + rand256() + ", " + rand256() + ", " + rand256() + ", " + opacity;
+	};
+	
+	var calcXCoord = exports.calcXCoord = function calcXCoord(xPixel, canvas, plane) {
+	
+	  return xPixel / canvas.width * (plane.xMax - plane.xMin) + plane.xMin;
+	};
+	
+	var calcYCoord = exports.calcYCoord = function calcYCoord(yPixel, canvas, plane) {
+	  var pixelFromBottom = canvas.height - yPixel;
+	
+	  return pixelFromBottom / canvas.height * (plane.yMax - plane.yMin) + plane.yMin;
+	};
+	
+	var calcYPixel = exports.calcYPixel = function calcYPixel(yCoord, canvas, plane) {
+	
+	  return (plane.yMax - yCoord) / (plane.yMax - plane.yMin) * canvas.height;
+	};
+	
+	// 330 240
+
+/***/ },
+/* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -491,7 +531,7 @@
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); //pass a color to each equation
 	
 	
-	var _util = __webpack_require__(3);
+	var _util = __webpack_require__(2);
 	
 	var UTIL = _interopRequireWildcard(_util);
 	
@@ -553,15 +593,12 @@
 	    key: 'toggleHide',
 	    value: function toggleHide() {
 	      this.hidden = !this.hidden;
-	      console.log(this.hidden);
 	      this.plane.logAllEquations();
 	    }
 	  }, {
 	    key: 'drawGraphOnce',
 	    value: function drawGraphOnce(compiledExpr) {
-	      console.log(this.plane.axesDrawn);
 	      if (!this.plane.axesDrawn) {
-	        console.log("drawing axes drawgraphonce");
 	        this.plane.drawAxes();
 	        this.plane.axesDrawn = true;
 	      }
@@ -586,7 +623,6 @@
 	        var compiledExpr = node.compile();
 	        that.compiledExpr = compiledExpr;
 	        that.drawGraphOnce(compiledExpr, that.plane.c);
-	        console.log("tried to draw");
 	      } catch (err) {
 	        console.log(err.toString());
 	      }
@@ -606,7 +642,7 @@
 	    }
 	  }, {
 	    key: 'drawAnything',
-	    value: function drawAnything(compiledExpr, c) {
+	    value: function drawAnything() {
 	      var ctx = this.plane.ctx;
 	      var canvas = this.plane.ctx.canvas;
 	      ctx.fillStyle = this.startingColor;
@@ -616,10 +652,10 @@
 	
 	      for (var xPixel = 0; xPixel < canvas.width; xPixel++) {
 	        var xCoord = UTIL.calcXCoord(xPixel, canvas, that.plane);
-	        var scope = { x: xCoord, c: c };
+	        var scope = { x: xCoord, c: that.plane.c };
 	
 	        try {
-	          var yCoord = math.format(compiledExpr.eval(scope));
+	          var yCoord = math.format(that.compiledExpr.eval(scope));
 	
 	          var yPixel = UTIL.calcYPixel(parseFloat(yCoord), canvas, that.plane);
 	
@@ -637,43 +673,6 @@
 	}();
 	
 	exports.default = Equation;
-
-/***/ },
-/* 3 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	var rand256 = exports.rand256 = function rand256() {
-	  return math.randomInt(0, 256);
-	};
-	
-	var randomColor = exports.randomColor = function randomColor() {
-	  var opacity = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
-	
-	  return "rgba(" + rand256() + ", " + rand256() + ", " + rand256() + ", " + opacity;
-	};
-	
-	var calcXCoord = exports.calcXCoord = function calcXCoord(xPixel, canvas, plane) {
-	
-	  return xPixel / canvas.width * (plane.xMax - plane.xMin) + plane.xMin;
-	};
-	
-	var calcYCoord = exports.calcYCoord = function calcYCoord(yPixel, canvas, plane) {
-	  var pixelFromBottom = canvas.height - yPixel;
-	
-	  return pixelFromBottom / canvas.height * (plane.yMax - plane.yMin) + plane.yMin;
-	};
-	
-	var calcYPixel = exports.calcYPixel = function calcYPixel(yCoord, canvas, plane) {
-	
-	  return (plane.yMax - yCoord) / (plane.yMax - plane.yMin) * canvas.height;
-	};
-	
-	// 330 240
 
 /***/ }
 /******/ ]);

@@ -41,15 +41,12 @@ class Equation {
 
   toggleHide() {
     this.hidden = !this.hidden;
-    console.log(this.hidden);
     this.plane.logAllEquations();
   }
 
 
   drawGraphOnce(compiledExpr) {
-    console.log(this.plane.axesDrawn);
     if (!this.plane.axesDrawn) {
-      console.log("drawing axes drawgraphonce");
       this.plane.drawAxes();
       this.plane.axesDrawn = true;
     }
@@ -73,7 +70,6 @@ class Equation {
       let compiledExpr = node.compile();
       that.compiledExpr = compiledExpr;
       that.drawGraphOnce(compiledExpr, that.plane.c);
-      console.log("tried to draw");
     }
     catch (err) {
       console.log(err.toString());
@@ -95,7 +91,7 @@ class Equation {
   }
 
 
-  drawAnything(compiledExpr, c) {
+  drawAnything() {
     let ctx = this.plane.ctx;
     let canvas = this.plane.ctx.canvas;
     ctx.fillStyle = this.startingColor;
@@ -105,10 +101,10 @@ class Equation {
 
     for (var xPixel = 0; xPixel < canvas.width; xPixel++) {
       let xCoord = UTIL.calcXCoord(xPixel, canvas, that.plane);
-      let scope = {x: xCoord, c: c}
+      let scope = {x: xCoord, c: that.plane.c}
 
       try {
-        let yCoord = math.format(compiledExpr.eval(scope));
+        let yCoord = math.format(that.compiledExpr.eval(scope));
 
         let yPixel = UTIL.calcYPixel(parseFloat(yCoord), canvas, that.plane);
 

@@ -111,6 +111,7 @@ class Plane {
         let textWidth = ctx.measureText(text).width;
         ctx.fillStyle = "purple";
         ctx.fillText(text, 20, 20);
+        that.axesDrawn = false;
       }
       // console.log(that.mouseXPixel, that.mouseYPixel);
       // console.log(that.mouseX, that.mouseY);
@@ -282,24 +283,23 @@ class Plane {
 
   animateGraphNow() {
     let that = this;
-    let colorpicker = document.getElementById(`colorpicker${this.num}`);
-
-    let drawButton = document.getElementById('draw-graph');
-    drawButton.disabled = true;
-
-    let expr = document.getElementById(`expression${this.num}`);
+    // let drawButton = document.getElementById('draw-graph');
+    // drawButton.disabled = true;
 
     try {
-      let node = math.parse(expr.value);
-      let compiledExpr = node.compile();
-      that.compiledExpr = compiledExpr;
-      that.animateGraph(compiledExpr);
+      that.equations.forEach((eq) => {
+        let expr = document.getElementById(`expression${eq.num}`);
+        let node = math.parse(expr.value);
+        let compiledExpr = node.compile();
+        eq.compiledExpr = compiledExpr;
+      });
+      that.animateAllGraphs();
     }
     catch (err) {
     }
   }
 
-  animateGraph(compiledExpr) {
+  animateAllGraphs() {
     let that = this;
     let cMinVal = parseFloat(document.getElementById('c-min').value);
     let cMaxVal = parseFloat(document.getElementById('c-max').value);
@@ -309,27 +309,30 @@ class Plane {
     }
     let cIncrementVal = (cMaxVal - cMinVal) / 50;
 
-    let c = cMinVal;
+    that.c = cMinVal;
 
     function step() {
-      if(!that.plane.axesDrawn) {
-        console.log("drawing axes");
-        that.plane.drawAxes();
-        that.plane.axesDrawn = true;
+      if(!that.axesDrawn) {
+        that.drawAxes();
+        that.axesDrawn = true;
       }
       // drawParabola(c)
       // drawSin(c)
 
-      that.drawAnything(compiledExpr, c);
-      $( "#slider" ).slider( "value", c );
-      $( "#custom-handle" ).text(c);
+      that.equations.forEach((eq) => {
+        eq.drawAnything();
+      });
+      that.axesDrawn = false;
 
-      c = math.round(c + cIncrementVal, 2);
-      if (c <= cMaxVal) {
+      $( "#slider" ).slider( "value", that.c );
+      $( "#custom-handle" ).text(that.c);
+
+      that.c = math.round(that.c + cIncrementVal, 2);
+      if (that.c <= cMaxVal) {
         window.requestAnimationFrame(step);
       } else {
-        let drawButton = document.getElementById('draw-graph');
-        drawButton.disabled = false;
+        // let drawButton = document.getElementById('draw-graph');
+        // drawButton.disabled = false;
       }
     }
     window.requestAnimationFrame(step);
