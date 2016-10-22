@@ -30,6 +30,7 @@ class Plane {
 
     this.equation1 = new Equation(1, this, 'black');
     this.equation2 = new Equation(2, this, 'violet');
+    this.equations = [this.equation1, this.equation2];
   }
 
   bindEvents() {
@@ -56,7 +57,7 @@ class Plane {
           handle.text( ui.value );
           let c = parseFloat(ui.value);
           that.c = c;
-          that.logEquation(c);
+          that.logAllEquations();
         },
         min: -10,
         max: 10,
@@ -112,6 +113,13 @@ class Plane {
     }
 
     window.requestAnimationFrame(() => this.dragUpdate());
+
+  }
+
+  logAllEquations() {
+    this.equations.forEach((eq) => {
+      eq.logEquation();
+    });
 
   }
 
@@ -209,7 +217,7 @@ class Plane {
     this.yMin = parseFloat(document.getElementById('window-y-min').value);
     this.yMax = parseFloat(document.getElementById('window-y-max').value);
     this.updateAxisLocations();
-    this.equation1.logEquation();
+    this.logAllEquations();
   }
 
   resetWindow(xMin, xMax, yMin, yMax) {

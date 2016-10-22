@@ -11,7 +11,7 @@ class Equation {
     this.hidden = false;
 
     this.setup(startingColor);
-    this.logEquation(0);
+    this.logEquation();
     // this.drawGraphOnce = this.drawGraphOnce.bind(this);
     // this.logEquation = this.logEquation.bind(this);
   }
@@ -23,32 +23,34 @@ class Equation {
       hideAfterPaletteSelect:true,
       color: startingColor,
       palette: ['black', 'red', 'orange', 'yellow', 'green', 'blue', 'violet', UTIL.randomColor()],
-      change: () => this.logEquation(),
+      change: () => this.plane.logAllEquations(),
     });
 
     let that = this;
 
-    $(`#randomColor${this.num}`).on("change", () => this.logEquation());
+    $(`#randomColor${this.num}`).on("change", () => this.plane.logAllEquations());
     $('#draw-graph').on("click", () => this.animateGraphNow());
-    $('.trigger-redraw').on("input", () => this.logEquation());
+    $('.trigger-redraw').on("input", () => this.plane.logAllEquations());
 
     $(`#trace-mode${this.num}`).on("click", () => {
       that.traceMode = !that.traceMode;
-      that.logEquation();
+      that.logAllEquations();
     });
 
   }
 
   drawGraphOnce(compiledExpr) {
-    this.plane.drawAxes();
+    if (this.num === 1) {
+      this.plane.drawAxes();
+    }
     this.drawAnything(compiledExpr, this.plane.c);
   }
 
 
   logEquation() { // called on input in forms
     let that = this;
-    if (typeof(that.c) !== "number") {
-      that.c = 0;
+    if (typeof(that.plane.c) !== "number") {
+      that.plane.c = 0;
     }
 
     let expr = document.getElementById(`expression${this.num}`);
@@ -116,7 +118,9 @@ class Equation {
     let c = cMinVal;
 
     function step() {
-      that.plane.drawAxes();
+      if(that.num === 1) {
+        that.plane.drawAxes();
+      }
       // drawParabola(c)
       // drawSin(c)
 

@@ -126,6 +126,7 @@
 	
 	    this.equation1 = new _equation2.default(1, this, 'black');
 	    this.equation2 = new _equation2.default(2, this, 'violet');
+	    this.equations = [this.equation1, this.equation2];
 	  }
 	
 	  _createClass(Plane, [{
@@ -178,7 +179,7 @@
 	            handle.text(ui.value);
 	            var c = parseFloat(ui.value);
 	            that.c = c;
-	            that.logEquation(c);
+	            that.logAllEquations();
 	          },
 	          min: -10,
 	          max: 10,
@@ -234,6 +235,13 @@
 	
 	      window.requestAnimationFrame(function () {
 	        return _this.dragUpdate();
+	      });
+	    }
+	  }, {
+	    key: 'logAllEquations',
+	    value: function logAllEquations() {
+	      this.equations.forEach(function (eq) {
+	        eq.logEquation();
 	      });
 	    }
 	  }, {
@@ -344,7 +352,7 @@
 	      this.yMin = parseFloat(document.getElementById('window-y-min').value);
 	      this.yMax = parseFloat(document.getElementById('window-y-max').value);
 	      this.updateAxisLocations();
-	      this.equation1.logEquation();
+	      this.logAllEquations();
 	    }
 	  }, {
 	    key: 'resetWindow',
@@ -436,7 +444,7 @@
 	    this.hidden = false;
 	
 	    this.setup(startingColor);
-	    this.logEquation(0);
+	    this.logEquation();
 	    // this.drawGraphOnce = this.drawGraphOnce.bind(this);
 	    // this.logEquation = this.logEquation.bind(this);
 	  }
@@ -453,31 +461,33 @@
 	        color: startingColor,
 	        palette: ['black', 'red', 'orange', 'yellow', 'green', 'blue', 'violet', UTIL.randomColor()],
 	        change: function change() {
-	          return _this.logEquation();
+	          return _this.plane.logAllEquations();
 	        }
 	      });
 	
 	      var that = this;
 	
 	      $('#randomColor' + this.num).on("change", function () {
-	        return _this.logEquation();
+	        return _this.plane.logAllEquations();
 	      });
 	      $('#draw-graph').on("click", function () {
 	        return _this.animateGraphNow();
 	      });
 	      $('.trigger-redraw').on("input", function () {
-	        return _this.logEquation();
+	        return _this.plane.logAllEquations();
 	      });
 	
 	      $('#trace-mode' + this.num).on("click", function () {
 	        that.traceMode = !that.traceMode;
-	        that.logEquation();
+	        that.logAllEquations();
 	      });
 	    }
 	  }, {
 	    key: 'drawGraphOnce',
 	    value: function drawGraphOnce(compiledExpr) {
-	      this.plane.drawAxes();
+	      if (this.num === 1) {
+	        this.plane.drawAxes();
+	      }
 	      this.drawAnything(compiledExpr, this.plane.c);
 	    }
 	  }, {
@@ -485,8 +495,8 @@
 	    value: function logEquation() {
 	      // called on input in forms
 	      var that = this;
-	      if (typeof that.c !== "number") {
-	        that.c = 0;
+	      if (typeof that.plane.c !== "number") {
+	        that.plane.c = 0;
 	      }
 	
 	      var expr = document.getElementById('expression' + this.num);
@@ -549,7 +559,9 @@
 	      var c = cMinVal;
 	
 	      function step() {
-	        that.plane.drawAxes();
+	        if (that.num === 1) {
+	          that.plane.drawAxes();
+	        }
 	        // drawParabola(c)
 	        // drawSin(c)
 	
