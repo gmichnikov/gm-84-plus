@@ -145,7 +145,9 @@ use request animation frame and a t variable to constantly replot while changing
 # ideas
 
 draw polar spiral
-
-draw with lines or dots
-
 add other lines besides axes - be able to turn grid on and off
+
+# simon
+
+770-900 pixels website freezes
+no effect on hover on social media icons

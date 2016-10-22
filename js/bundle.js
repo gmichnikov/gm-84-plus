@@ -214,6 +214,8 @@
 	        that.mouseX = UTIL.calcXCoord(that.mouseXPixel, that.canvas, that);
 	        that.mouseY = UTIL.calcYCoord(that.mouseYPixel, that.canvas, that);
 	
+	        var ctx = that.ctx;
+	
 	        if (that.tracing) {
 	
 	          var equation = that.equations.find(function (eq) {
@@ -223,7 +225,6 @@
 	          var scope = { x: that.mouseX, c: that.c };
 	          var yCoord = math.format(equation.compiledExpr.eval(scope));
 	          var yPixel = UTIL.calcYPixel(parseFloat(yCoord), that.canvas, that);
-	          var ctx = that.ctx;
 	
 	          equation.logEquation();
 	          ctx.beginPath();
@@ -236,8 +237,18 @@
 	          ctx.font = "16px Arial";
 	          var text = '(' + math.round(that.mouseX, 3) + ', ' + math.round(yCoord, 3) + ')';
 	          var textWidth = ctx.measureText(text).width;
-	          ctx.fillStyle = "purple";
+	          ctx.fillStyle = "yellow";
 	          ctx.fillText(text, 20, 20);
+	          that.axesDrawn = false;
+	        } else {
+	
+	          that.logAllEquations();
+	          ctx.textAlign = "left";
+	          ctx.font = "16px Arial";
+	          var _text = '(' + math.round(that.mouseX, 3) + ', ' + math.round(that.mouseY, 3) + ')';
+	          var _textWidth = ctx.measureText(_text).width;
+	          ctx.fillStyle = "black";
+	          ctx.fillText(_text, 20, 20);
 	          that.axesDrawn = false;
 	        }
 	        // console.log(that.mouseXPixel, that.mouseYPixel);

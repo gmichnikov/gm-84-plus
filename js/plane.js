@@ -93,6 +93,8 @@ class Plane {
       that.mouseX = UTIL.calcXCoord(that.mouseXPixel, that.canvas, that);
       that.mouseY = UTIL.calcYCoord(that.mouseYPixel, that.canvas, that);
 
+      let ctx = that.ctx;
+
       if (that.tracing) {
 
         let equation = that.equations.find((eq) => {
@@ -102,7 +104,6 @@ class Plane {
         let scope = { x: that.mouseX, c: that.c };
         let yCoord = math.format(equation.compiledExpr.eval(scope));
         let yPixel = UTIL.calcYPixel(parseFloat(yCoord), that.canvas, that);
-        let ctx = that.ctx;
 
         equation.logEquation();
         ctx.beginPath();
@@ -115,9 +116,21 @@ class Plane {
         ctx.font = "16px Arial";
         let text = `(${math.round(that.mouseX, 3)}, ${math.round(yCoord, 3)})`;
         let textWidth = ctx.measureText(text).width;
-        ctx.fillStyle = "purple";
+        ctx.fillStyle = "yellow";
         ctx.fillText(text, 20, 20);
         that.axesDrawn = false;
+      } else {
+
+        that.logAllEquations();
+        ctx.textAlign = "left";
+        ctx.font = "16px Arial";
+        let text = `(${math.round(that.mouseX, 3)}, ${math.round(that.mouseY, 3)})`;
+        let textWidth = ctx.measureText(text).width;
+        ctx.fillStyle = "black";
+        ctx.fillText(text, 20, 20);
+        that.axesDrawn = false;
+
+
       }
       // console.log(that.mouseXPixel, that.mouseYPixel);
       // console.log(that.mouseX, that.mouseY);
