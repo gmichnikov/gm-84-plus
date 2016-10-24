@@ -1,87 +1,54 @@
-## GM-84 Plus: A JavaScript Graphing Calculator
+# GM-84 Plus
 
-### MVP
+[Live!][gm84plus]
+[gm84plus]: https://gmichnikov.github.io/gm-84-plus/
 
-GM-84 Plus will be a browser-based graphing calculator. In addition to giving users the ability to type in an equation and see the graph of that equation, GM-84 Plus will be able to:
+## Summary
 
-- [ ] Identify whether the input is or is not a valid mathematical expression
-- [ ] Graph multiple equations at the same time, in different colors
-- [ ] Allow users to toggle a given graph on or off
-- [ ] Zoom in or Zoom out, using either button or mouse scroll (TBD)
-- [ ] Pan in any of the four directions, using either dragging or arrow keys
-- [ ] For a list of pre-selected graphs, provide sliders on various coefficients so that users can see how changes to those coefficients affect the graphs (e.g. lines, quadratics, trig)
-- [ ] Allow toggle between drawing with animation, or all at once
-- [ ] Find the point(s) of intersection of two selected graphs
-- [ ] Find the point(s) where a graph cross the x-axis
-- [ ] A "trace" feature that allows a user to move the mouse across the canvas
+GM-84 Plus is a browser-based graphing calculator. It allows users to graph math functions multi-color, trace the values of the functions, and animate the functions to see how the graphs change as a variable within the function changes.
 
-In addition, this project will include:
+Other features include drag-and-drop window movement, zoom in/out on any point via mouse scroll, and immediate pretty-printing of equations.
 
-- [ ] A modal describing how to use the graphing calculator
-- [ ] A production README
+## Instructions
 
-### Wireframes
++ In the left panel, type in the equations that you would like to graph. You can choose a color, choose to hide the graph, or choose trace mode. Trace Mode allows you to move your mouse in the plane and see the x-y values of this graph as you move.
++ Basic features include zoom in/out by scrolling your mouse, and panning to differnet parts of the plane by dragging/dropping with your mouse. You can also zoom/pan using the buttons at the bottom right of the canvas.
++ The yellow Y= button shows/hides the left panel.
++ The blue buttons allow you to adjust the window, i.e. determine which parts of the x-y plane are visible. You can choose z-standard (the default); z-square, which adjusts the window so that the x/y ratio matches that of the canvas itself; or custom.
++ Animate shows you how your graph changes as the value of the variable c changes. The graph will only look animated if your equation includes a variable c, as the two provided examples do. You can adjust the min/max of c on either side of the slider.
 
-This app will consist of a single screen, with the coordinate plane taking up most of the space. There will be an area for entering equations and zooming/panning to the left. Links to the Github, my LinkedIn, and the directions modal will appear at the bottom. Each graph will have a color selector next to it, as well as checkbox for showing/hiding the graph.
+## Technology
 
-![wireframes](https://github.com/gmichnikov/gm-84-plus/blob/master/docs/wireframes/wireframes.001.jpeg)
+### GM-84 Plus was built using:
+- [HTML5 Canvas](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API) for rendering of the equations
+- [Math.js](http://mathjs.org/) for parsing, compiling, and evaluating math expressions
+- [MathQuill](http://mathquill.com/) for immediate pretty-printing of math expressions
+- [jQueryUI](https://jqueryui.com/) for modal, slider, and tooltip
+- [Spectrum](https://bgrins.github.io/spectrum/) for color selection
+- [Google](https://design.google.com/icons/) and [Font Awesome](http://fontawesome.io/icons/) for icons
 
-### Architecture and Technologies
+## Features
 
-This project will be implemented with the following technologies:
+### Drag and Drop Panning
+coming soon
 
-- Vanilla JavaScript and `jQuery` for overall structure and logic,
-- `HTML5 Canvas` for rendering of the graphs,
-- `MathJax` for displaying math equations,
-- `Math.js` for parsing strings into expressions, and for more advanced math calculations,
-- `jQuery` for a slider,
-- Webpack to bundle and serve up the various scripts.
+### Scroll-Zoom
+coming soon
 
-In addition to the webpack entry file, there will be three scripts involved in this project:
-
-`graph.js`: will handle rendering the graphs.
-
-`equations.js`: will handle the input and parsing of expressions/equations.
-
-`calculations.js`: will handle elements such as trace, intersections, etc.
+### Animation
+coming soon
 
 
-### Implementation Timeline
+## Next steps for further development of GM-84 Plus
 
+#### Solutions, Min/Max
+- Adding more features that replicate the calculation ability of the real deal!
 
-**Day 1**: Download, install, and learn the basics of `Mathquill` and `Math.js`. Create `webpack.config.js` and get webpack up and running. Goals for the day:
+#### More sample graphs
+- Currently there are just the two that are typed in upon coming to the site
 
-- Get a green bundle with `webpack`
-- Learn enough `Mathquill` to be able to type in a math expression, identify whether or not it is valid, and graph it in a `Canvas` element if it is valid
-- Be able to change the color of the graph and toggle it on and off
+#### Gridlines
+-  Allowing more options in addition to the axes-only style currently used
 
-
-**Day 2**: Work on zooming and panning, as well as displaying multiple graphs. Toggle between animated drawing and all-at-once. Implement trace. Goals for the day:
-
-- Be able to seamlessly zoom and pan with any graph
-- Be able to pan in any direction on any graph
-- Be able to toggle animated drawing on and off
-- Be able to click on Trace mode, which then shows x/y values while moving mouse around
-
-
-**Day 3**: Add pre-selected graphs and make it easy to load them in, along with the associated sliders. Add logic to calculate solutions and intersections of two graphs. Goals for the day:
-
-- Include y = mx + b with sliders for m, b
-- Include y = ax^2 + bx + c with sliders for a, b, and c
-- Include y = Asin(b(x + c)) with sliders for a, b, and c
-
-
-**Day 4**: Finish anything that is not complete, and implement bonus features.
-
-### Bonus features
-
-Possible bonus features include:
-
-- [ ] Toggling gridlines on/off
-- [ ] Allow the user to enter the window measurements and adjusting accordingly
-- [ ] Supporting polar graphs
-- [ ] Printing tick marks
-- [ ] Local or Absolute min/max
-- [ ] Greater than / less than in addition to the standard Y=
-- [ ] Radians / Degrees option
-- [ ] "Value" feature that shows the y-value for any desired x-value
+#### Polar
+- Supporting polar coordinates, in order to allow equations of the form r(theta)
