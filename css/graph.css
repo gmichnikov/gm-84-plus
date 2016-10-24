@@ -295,3 +295,38 @@ a.y-equals-hider:hover {
   background-color: white;
   border-radius: 5px;
 }
+
+.contact-info {
+  margin-top: 20px;
+}
+
+.contact-info a {
+  display: block;
+  margin: 10px 5px;
+}
+
+.contact-info a:hover {
+  font-weight: bold;
+}
+
+
+.contact-info i {
+  display: inline-block;;
+  width: 24px;
+  font-size: 24px;
+  margin-right: 5px;
+  text-align: right;
+}
+
+.contact-info p {
+  text-align: center;
+}
+
+
+#instructions-modal {
+  width: 700px;
+}
+
+#instructions-modal p {
+  padding: 5px;
+}

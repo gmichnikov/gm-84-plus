@@ -52,6 +52,9 @@
     <link href="https://fonts.googleapis.com/css?family=Lato:400,400i,700" rel="stylesheet">
 
 
+    <!-- font awesome icons -->
+    <script src="https://use.fontawesome.com/61c226047f.js"></script>
+
     <!-- custom -->
     <link rel='stylesheet' href='./css/graph.css' />
 
@@ -68,10 +71,10 @@
 
       <div class="plane-controls">
         <a class="y-equals-hider" title="Show/Hide equation editor">Y=</a>
-        <a href="#window-modal" rel="modal:open" title="Edit the min/max visible values of x/y in the graph">Window</a>
 
         <a class="zoom-option" id="reset-window-standard" title="Resets window to X(-10, 10)  and Y(-10, 10)">Z-Standard</a>
         <a class="zoom-option" id="reset-window-square" title="Resets window to X(-16, 16) and Y(-10, 10)">Z-Square</a>
+        <a href="#window-modal" rel="modal:open" title="Edit the min/max visible values of x/y in the graph">Custom</a>
 
         <a id="animate-graph" title="Shows how the graphs change as c moves from the minimum to the maximum set below (only graphs of expressions containing c will change)" >Animate</a>
 
@@ -100,7 +103,14 @@
         </div>
 
         <div id="instructions-modal" style="display:none;">
-          Welcome!
+          [This will be improved soon]
+          <p>Welcome to the GM-84 Plus graphing calculator!</p>
+          <p>In the left panel, type in the equations that you would like to graph. You can choose a color, choose to hide the graph, or choose trace mode. Trace Mode allows you to move your mouse in the plane and see the x-y values of this graph as you move.</p>
+          <p>Basic features include zoom in/out by scrolling your mouse, and panning to differnet parts of the plane by dragging/dropping with your mouse. You can also zoom/pan using the buttons at the bottom right of the canvas.</p>
+          <p>The yellow Y= button shows/hides the left panel.</p>
+          <p>The blue buttons allow you to adjust the window, i.e. determine which parts of the x-y plane are visible. You can choose z-standard (the default); z-square, which adjusts the window so that the x/y ratio matches that of the canvas itself; or custom.</p>
+          <p>Animate shows you how your graph changes as the value of the variable c changes. The graph will only look animated if your equation includes a variable c, as the two provided examples do. You can adjust the min/max of c on either side of the slider.</p>
+
         </div>
 
         <div class="equation">
@@ -145,8 +155,20 @@
 
         </div>
 
+        <div class="contact-info">
+          <p>
+            Created by Greg Michnikov
+          </p>
+          <a href="http://gregmichnikov.com" target="_blank">
+            <i class="fa fa-briefcase" aria-hidden="true"></i> greg.michnikov.com
+          </a>
+          <a href="https://www.linkedin.com/in/gregmichnikov" target="_blank"><i class="fa fa-linkedin" aria-hidden="true"></i> gregmichnikov</a>
+          <a href="https://github.com/gmichnikov/" target="_blank"><i class="fa fa-github" aria-hidden="true"></i> gmichnikov</a>
+          <a href="mailto:greg.michnikov@gmail.com"><i class="fa fa-paper-plane" aria-hidden="true"></i> greg.michnikov@gmail.com</a>
+        </div>
 
       </div>
+
 
     </div>
 
