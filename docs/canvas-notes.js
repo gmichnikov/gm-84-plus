@@ -147,6 +147,12 @@ use request animation frame and a t variable to constantly replot while changing
 draw polar spiral
 add other lines besides axes - be able to turn grid on and off
 
+put links to my profile websites
+add in a help page to explain how it works
+list of functions to try
+animate doesnt hide
+
+
 # simon
 
 770-900 pixels website freezes

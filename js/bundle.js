@@ -124,8 +124,8 @@
 	
 	    this.c = 0;
 	
-	    this.equation1 = new _equation2.default(1, this, 'black');
-	    this.equation2 = new _equation2.default(2, this, 'violet');
+	    this.equation1 = new _equation2.default(1, this, 'maroon');
+	    this.equation2 = new _equation2.default(2, this, 'navy');
 	    this.equations = [this.equation1, this.equation2];
 	    this.axesDrawn = false;
 	    this.tracing = false;
@@ -170,7 +170,7 @@
 	      $('.c-data').on("input", function () {
 	        return _this.adjustSliderBounds();
 	      });
-	      $('#draw-graph').on("click", function () {
+	      $('#animate-graph').on("click", function () {
 	        return _this.animateGraphNow();
 	      });
 	
@@ -178,10 +178,10 @@
 	        var handle = $("#custom-handle");
 	        $("#slider").slider({
 	          create: function create() {
-	            handle.text("c=" + $(this).slider("value"));
+	            handle.text("c = " + $(this).slider("value"));
 	          },
 	          slide: function slide(event, ui) {
-	            handle.text("c=" + ui.value);
+	            handle.text("c = " + ui.value);
 	            var c = parseFloat(ui.value);
 	            that.c = c;
 	            that.logAllEquations();
@@ -227,18 +227,24 @@
 	          var yPixel = UTIL.calcYPixel(parseFloat(yCoord), that.canvas, that);
 	
 	          equation.logEquation();
-	          ctx.beginPath();
-	          ctx.arc(that.mouseXPixel, yPixel, 10, 0, Math.PI * 2);
-	          ctx.fillStyle = "yellow";
-	          ctx.fill();
-	          ctx.closePath();
 	
-	          ctx.textAlign = "left";
-	          ctx.font = "16px Arial";
-	          var text = '(' + math.round(that.mouseX, 3) + ', ' + math.round(yCoord, 3) + ')';
-	          var textWidth = ctx.measureText(text).width;
-	          ctx.fillStyle = "yellow";
-	          ctx.fillText(text, 20, 20);
+	          if (!isNaN(yCoord)) {
+	            ctx.beginPath();
+	            ctx.arc(that.mouseXPixel, yPixel, 10, 0, Math.PI * 2);
+	            ctx.fillStyle = "yellow";
+	            ctx.fill();
+	            ctx.closePath();
+	
+	            ctx.textAlign = "left";
+	            ctx.font = "16px Arial";
+	            if (that.mouseX === 0) {
+	              console.log(yCoord);
+	            }
+	            var text = '(' + math.round(that.mouseX, 3) + ', ' + math.round(yCoord, 3) + ')';
+	            var textWidth = ctx.measureText(text).width;
+	            ctx.fillStyle = "yellow";
+	            ctx.fillText(text, 20, 20);
+	          }
 	          that.axesDrawn = false;
 	        } else {
 	
@@ -439,7 +445,7 @@
 	    key: 'animateGraphNow',
 	    value: function animateGraphNow() {
 	      var that = this;
-	      // let drawButton = document.getElementById('draw-graph');
+	      // let drawButton = document.getElementById('animate-graph');
 	      // drawButton.disabled = true;
 	
 	      try {
@@ -480,13 +486,13 @@
 	        that.axesDrawn = false;
 	
 	        $("#slider").slider("value", that.c);
-	        $("#custom-handle").text('c=' + that.c);
+	        $("#custom-handle").text('c = ' + that.c);
 	
 	        that.c = math.round(that.c + cIncrementVal, 2);
 	        if (that.c <= cMaxVal) {
 	          window.requestAnimationFrame(step);
 	        } else {
-	          // let drawButton = document.getElementById('draw-graph');
+	          // let drawButton = document.getElementById('animate-graph');
 	          // drawButton.disabled = false;
 	        }
 	      }
@@ -584,7 +590,7 @@
 	        showPalette: true,
 	        hideAfterPaletteSelect: true,
 	        color: startingColor,
-	        palette: ['black', 'red', 'orange', 'yellow', 'green', 'blue', 'violet', UTIL.randomColor()],
+	        palette: ['black', 'maroon', 'orange', 'goldenrod', 'darkgreen', 'navy', 'purple'],
 	        change: function change() {
 	          return _this.plane.logAllEquations();
 	        }
@@ -593,6 +599,9 @@
 	      var that = this;
 	
 	      $('#randomColor' + this.num).on("change", function () {
+	        return _this.plane.logAllEquations();
+	      });
+	      $('.trigger-redraw').on("change", function () {
 	        return _this.plane.logAllEquations();
 	      });
 	      $('.trigger-redraw').on("input", function () {
@@ -644,7 +653,7 @@
 	      }
 	
 	      var expr = document.getElementById('expression' + this.num);
-	      var pretty = document.getElementById('pretty' + this.num);
+	      // let pretty = document.getElementById(`pretty${this.num}`);
 	
 	      var node = null;
 	
@@ -653,28 +662,30 @@
 	        var compiledExpr = node.compile();
 	        that.compiledExpr = compiledExpr;
 	        that.drawGraphOnce(compiledExpr, that.plane.c);
-	      } catch (err) {
-	        console.log(err.toString());
-	      }
+	      } catch (err) {}
+	      // console.log(err.toString());
 	
-	      try {
-	        var nodeWithY = math.parse('Y==' + expr.value);
-	        // console.log("step1");
-	        var latex = nodeWithY ? nodeWithY.toTex({ implicit: 'show' }) : '';
-	        // console.log("step2");
 	
-	        var elem = MathJax.Hub.getAllJax('pretty' + this.num)[0];
-	        // console.log("step3");
-	        if (!elem) {
-	          // console.log("step4");
-	          pretty.innerHTML = '$$' + nodeWithY.toTex() + '$$';
-	        }
-	        // console.log("step5");
-	        MathJax.Hub.Queue(['Text', elem, latex]);
-	        // console.log("step6");
-	      } catch (err) {
-	        console.log("latex error");
-	      }
+	      // try {
+	      //   let nodeWithY = math.parse(`Y==${expr.value}`);
+	      //   // console.log("step1");
+	      //   let latex = nodeWithY ? nodeWithY.toTex({implicit:'show'}) : '';
+	      //   // console.log("step2");
+	      //
+	      //   let elem = MathJax.Hub.getAllJax(`pretty${this.num}`)[0];
+	      //   // console.log("step3");
+	      //   if (!elem) {
+	      //     // console.log("step4");
+	      //     pretty.innerHTML = '$$' + nodeWithY.toTex() + '$$';
+	      //   }
+	      //   // console.log("step5");
+	      //   MathJax.Hub.Queue(['Text', elem, latex]);
+	      //   // console.log("step6");
+	      //
+	      // }
+	      // catch (err) {
+	      //   console.log("latex error");
+	      // }
 	    }
 	  }, {
 	    key: 'drawAnything',
@@ -693,13 +704,14 @@
 	        try {
 	          var yCoord = math.format(that.compiledExpr.eval(scope));
 	
-	          var yPixel = UTIL.calcYPixel(parseFloat(yCoord), canvas, that.plane);
-	
-	          ctx.beginPath();
-	          ctx.arc(xPixel, yPixel, 3, 0, Math.PI * 2);
-	          ctx.fillStyle = chooseRandom ? UTIL.randomColor() : selectedColor;
-	          ctx.fill();
-	          ctx.closePath();
+	          if (!isNaN(yCoord)) {
+	            var yPixel = UTIL.calcYPixel(parseFloat(yCoord), canvas, that.plane);
+	            ctx.beginPath();
+	            ctx.arc(xPixel, yPixel, 3, 0, Math.PI * 2);
+	            ctx.fillStyle = chooseRandom ? UTIL.randomColor() : selectedColor;
+	            ctx.fill();
+	            ctx.closePath();
+	          }
 	        } catch (err) {}
 	      }
 	    }

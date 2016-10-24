@@ -22,13 +22,14 @@ class Equation {
       showPalette:true,
       hideAfterPaletteSelect:true,
       color: startingColor,
-      palette: ['black', 'red', 'orange', 'yellow', 'green', 'blue', 'violet', UTIL.randomColor()],
+      palette: ['black', 'maroon', 'orange', 'goldenrod', 'darkgreen', 'navy', 'purple'],
       change: () => this.plane.logAllEquations(),
     });
 
     let that = this;
 
     $(`#randomColor${this.num}`).on("change", () => this.plane.logAllEquations());
+    $('.trigger-redraw').on("change", () => this.plane.logAllEquations());
     $('.trigger-redraw').on("input", () => this.plane.logAllEquations());
     $(`#hide-graph${this.num}`).on("change", () => this.toggleHide());
 
@@ -73,7 +74,7 @@ class Equation {
     }
 
     let expr = document.getElementById(`expression${this.num}`);
-    let pretty = document.getElementById(`pretty${this.num}`);
+    // let pretty = document.getElementById(`pretty${this.num}`);
 
     let node = null;
 
@@ -84,29 +85,29 @@ class Equation {
       that.drawGraphOnce(compiledExpr, that.plane.c);
     }
     catch (err) {
-      console.log(err.toString());
+      // console.log(err.toString());
     }
 
-    try {
-      let nodeWithY = math.parse(`Y==${expr.value}`);
-      // console.log("step1");
-      let latex = nodeWithY ? nodeWithY.toTex({implicit:'show'}) : '';
-      // console.log("step2");
-
-      let elem = MathJax.Hub.getAllJax(`pretty${this.num}`)[0];
-      // console.log("step3");
-      if (!elem) {
-        // console.log("step4");
-        pretty.innerHTML = '$$' + nodeWithY.toTex() + '$$';
-      }
-      // console.log("step5");
-      MathJax.Hub.Queue(['Text', elem, latex]);
-      // console.log("step6");
-
-    }
-    catch (err) {
-      console.log("latex error");
-    }
+    // try {
+    //   let nodeWithY = math.parse(`Y==${expr.value}`);
+    //   // console.log("step1");
+    //   let latex = nodeWithY ? nodeWithY.toTex({implicit:'show'}) : '';
+    //   // console.log("step2");
+    //
+    //   let elem = MathJax.Hub.getAllJax(`pretty${this.num}`)[0];
+    //   // console.log("step3");
+    //   if (!elem) {
+    //     // console.log("step4");
+    //     pretty.innerHTML = '$$' + nodeWithY.toTex() + '$$';
+    //   }
+    //   // console.log("step5");
+    //   MathJax.Hub.Queue(['Text', elem, latex]);
+    //   // console.log("step6");
+    //
+    // }
+    // catch (err) {
+    //   console.log("latex error");
+    // }
   }
 
 
@@ -125,13 +126,14 @@ class Equation {
       try {
         let yCoord = math.format(that.compiledExpr.eval(scope));
 
-        let yPixel = UTIL.calcYPixel(parseFloat(yCoord), canvas, that.plane);
-
-        ctx.beginPath();
-        ctx.arc(xPixel, yPixel, 3, 0, Math.PI*2);
-        ctx.fillStyle = chooseRandom ? UTIL.randomColor() : selectedColor;
-        ctx.fill();
-        ctx.closePath();
+        if (!isNaN(yCoord)) {
+          let yPixel = UTIL.calcYPixel(parseFloat(yCoord), canvas, that.plane);
+          ctx.beginPath();
+          ctx.arc(xPixel, yPixel, 3, 0, Math.PI*2);
+          ctx.fillStyle = chooseRandom ? UTIL.randomColor() : selectedColor;
+          ctx.fill();
+          ctx.closePath();
+        }
       }
       catch (err) {
       }

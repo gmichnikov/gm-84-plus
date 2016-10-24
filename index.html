@@ -14,6 +14,17 @@
         hide: {
         }
       });
+
+      let counter = 0;
+      let equationText = "x-x^2/4*sin(x+c)";
+      let equationInterval = setInterval(function(){
+        if (counter <= equationText.length) {
+          $('#expression1').val(equationText.slice(0, counter));
+          $('#expression1').trigger("change");
+        }
+        counter++;
+      }, 300);
+
     } );
     </script>
 
@@ -34,8 +45,10 @@
     <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" charset="utf-8"></script>
     <!-- <script src="./js/math.min.js" charset="utf-8"></script> -->
 
-    <!-- google icons -->
+    <!-- google icons/fonts -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,400i,700" rel="stylesheet">
+
 
     <!-- custom -->
     <link rel='stylesheet' href='./css/graph.css' />
@@ -53,10 +66,13 @@
 
       <div class="plane-controls">
         <a class="y-equals-hider" title="Show/Hide equation editor">Y=</a>
+        <a href="#window-modal" rel="modal:open">Window</a>
+
         <a class="zoom-option" id="reset-window-standard" title="Resets window to X(-10, 10)  and Y(-10, 10)">Z-Standard</a>
         <a class="zoom-option" id="reset-window-square" title="Resets window to X(-16, 16)  and Y(-10, 10), which maintains xy proportions">Z-Square</a>
-        <a id="draw-graph" title="Redraws the graphs as c moves from the minimum to the maximum set below (only graphs of expressions containing c will change)" >Animate</a>
-        <a href="#window-modal" rel="modal:open">Window</a>
+
+        <a id="animate-graph" title="Redraws the graphs as c moves from the minimum to the maximum set below (only graphs of expressions containing c will change)" >Animate</a>
+
         <span class="plane-adjust-buttons" >
           <i class="material-icons plane-adjust" id="zoom-in">zoom_in</i>
           <i class="material-icons plane-adjust" id="zoom-out">zoom_out</i>
@@ -77,10 +93,10 @@
 
       <div class="equations">
         <div class="equation">
-          <label>Y1 = </label>
-          <input id="expression1" class="expression trigger-redraw" value="x * (c + 1) * sin(x + c)"/>
+          <label class="y-equals">Y1 = </label>
+          <input id="expression1" class="expression trigger-redraw" value=""/>
 
-          <span class="pretty" id="pretty1">$$$$</span>
+          <!-- <span class="pretty" id="pretty1">$$$$</span> -->
 
           <div class="color-row">
             <input id='colorpicker1' />
@@ -95,10 +111,10 @@
         </div>
 
         <div class="equation">
-          <label>Y2 = </label>
-          <input id="expression2" class="expression trigger-redraw" value="x + c"/>
+          <label class="y-equals">Y2 = </label>
+          <input id="expression2" class="expression trigger-redraw" placeholder="Try x^2 or sin or log..."/>
 
-          <span class="pretty" id="pretty2">$$$$</span>
+          <!-- <span class="pretty" id="pretty2">$$$$</span> -->
 
           <div class="color-row">
             <input id='colorpicker2' />
@@ -125,17 +141,15 @@
     </div>
 
     <div class="else">
-      <p>Type math here: <span id="math-field"></span></p>
+      <!-- <p>Type math here: <span id="math-field"></span></p>
       <p>LaTeX of what you typed: <span id="latex"></span></p>
-      <p>Temp holder: <span id="temp"></span></p>
+      <p>Temp holder: <span id="temp"></span></p> -->
 
       <script>
         var mathFieldSpan = document.getElementById('math-field');
         var latexSpan = document.getElementById('latex');
 
         var MQ = MathQuill.getInterface(2); // for backcompat
-        let temp = mathFieldSpan.innerHTML;
-        // console.log(temp);
         var mathField = MQ.MathField(mathFieldSpan, {
           spaceBehavesLikeTab: true, // configurable
           autoCommands: 'pi theta sqrt sum',
@@ -144,8 +158,6 @@
           },
           handlers: {
             edit: function() { // useful event handlers
-              // console.log(mathField.html());
-              console.log(mathField);
               latexSpan.textContent = mathField.latex(); // simple API
             }
           }

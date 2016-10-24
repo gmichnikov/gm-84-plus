@@ -28,8 +28,8 @@ class Plane {
 
     this.c = 0;
 
-    this.equation1 = new Equation(1, this, 'black');
-    this.equation2 = new Equation(2, this, 'violet');
+    this.equation1 = new Equation(1, this, 'maroon');
+    this.equation2 = new Equation(2, this, 'navy');
     this.equations = [this.equation1, this.equation2];
     this.axesDrawn = false;
     this.tracing = false;
@@ -49,17 +49,17 @@ class Plane {
     $('#pan-down').on("click", () => this.pan("down"));
     $('.y-equals-hider').on("click", () => $('.equations').toggleClass('hide-equations'));
     $('.c-data').on("input", () => this.adjustSliderBounds());
-    $('#draw-graph').on("click", () => this.animateGraphNow());
+    $('#animate-graph').on("click", () => this.animateGraphNow());
 
 
     $( function() {
       var handle = $( "#custom-handle" );
       $( "#slider" ).slider({
         create: function() {
-          handle.text( "c=" + $( this ).slider( "value" ) );
+          handle.text( "c = " + $( this ).slider( "value" ) );
         },
         slide: function( event, ui ) {
-          handle.text( "c=" + ui.value );
+          handle.text( "c = " + ui.value );
           let c = parseFloat(ui.value);
           that.c = c;
           that.logAllEquations();
@@ -106,18 +106,24 @@ class Plane {
         let yPixel = UTIL.calcYPixel(parseFloat(yCoord), that.canvas, that);
 
         equation.logEquation();
-        ctx.beginPath();
-        ctx.arc(that.mouseXPixel, yPixel, 10, 0, Math.PI*2);
-        ctx.fillStyle = "yellow";
-        ctx.fill();
-        ctx.closePath();
 
-        ctx.textAlign = "left";
-        ctx.font = "16px Arial";
-        let text = `(${math.round(that.mouseX, 3)}, ${math.round(yCoord, 3)})`;
-        let textWidth = ctx.measureText(text).width;
-        ctx.fillStyle = "yellow";
-        ctx.fillText(text, 20, 20);
+        if (!isNaN(yCoord)) {
+          ctx.beginPath();
+          ctx.arc(that.mouseXPixel, yPixel, 10, 0, Math.PI*2);
+          ctx.fillStyle = "yellow";
+          ctx.fill();
+          ctx.closePath();
+
+          ctx.textAlign = "left";
+          ctx.font = "16px Arial";
+          if (that.mouseX === 0) {
+            console.log(yCoord);
+          }
+          let text = `(${math.round(that.mouseX, 3)}, ${math.round(yCoord, 3)})`;
+          let textWidth = ctx.measureText(text).width;
+          ctx.fillStyle = "yellow";
+          ctx.fillText(text, 20, 20);
+        }
         that.axesDrawn = false;
       } else {
 
@@ -303,7 +309,7 @@ class Plane {
 
   animateGraphNow() {
     let that = this;
-    // let drawButton = document.getElementById('draw-graph');
+    // let drawButton = document.getElementById('animate-graph');
     // drawButton.disabled = true;
 
     try {
@@ -345,13 +351,13 @@ class Plane {
       that.axesDrawn = false;
 
       $( "#slider" ).slider( "value", that.c );
-      $( "#custom-handle" ).text(`c=${that.c}`);
+      $( "#custom-handle" ).text(`c = ${that.c}`);
 
       that.c = math.round(that.c + cIncrementVal, 2);
       if (that.c <= cMaxVal) {
         window.requestAnimationFrame(step);
       } else {
-        // let drawButton = document.getElementById('draw-graph');
+        // let drawButton = document.getElementById('animate-graph');
         // drawButton.disabled = false;
       }
     }
