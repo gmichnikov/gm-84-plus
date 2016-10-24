@@ -16,7 +16,7 @@
       });
 
       let counter = 0;
-      let equationText = "x-x^2/4*sin(x+c)";
+      let equationText = "x*sin(x+c)";
       let equationInterval = setInterval(function(){
         if (counter <= equationText.length) {
           $('#expression1').val(equationText.slice(0, counter));
@@ -92,6 +92,15 @@
       </div>
 
       <div class="equations">
+
+        <div class="instructions">
+          <a href="#instructions-modal" rel="modal:open">How to use the GM-84 Plus</a>
+        </div>
+
+        <div id="instructions-modal" style="display:none;">
+          Welcome!
+        </div>
+
         <div class="equation">
           <label class="y-equals">Y1 = </label>
           <input id="expression1" class="expression trigger-redraw" value=""/>
@@ -141,13 +150,25 @@
     </div>
 
     <div class="else">
-      <!-- <p>Type math here: <span id="math-field"></span></p>
+      <p>Type math here: <span id="math-field"></span></p>
       <p>LaTeX of what you typed: <span id="latex"></span></p>
-      <p>Temp holder: <span id="temp"></span></p> -->
+      <p>Temp holder: <span id="temp"></span></p>
 
       <script>
         var mathFieldSpan = document.getElementById('math-field');
         var latexSpan = document.getElementById('latex');
+
+        let replaceText = function(txt) {
+          txt = txt.replace("\\l*o*g *", "log10");
+          txt = txt.replace("\\l*n *", "log");
+          txt = txt.replace("\\s*i*n *", "sin");
+          txt = txt.replace("\\c*o*s *", "cos");
+          txt = txt.replace("\\t*a*n *", "tan");
+          txt = txt.replace("a*b*s*", "abs");
+          txt = txt.replace("(*", "(");
+          txt = txt.replace("*)", ")");
+          return txt;
+        }
 
         var MQ = MathQuill.getInterface(2); // for backcompat
         var mathField = MQ.MathField(mathFieldSpan, {
@@ -159,6 +180,7 @@
           handlers: {
             edit: function() { // useful event handlers
               latexSpan.textContent = mathField.latex(); // simple API
+              console.log(replaceText(mathField.text()));
             }
           }
         });
