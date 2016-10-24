@@ -82,13 +82,14 @@ class Equation {
       that.plane.c = 0;
     }
 
-    let expr = document.getElementById(`expression${this.num}`);
+    let expr = document.getElementById(`hidden-expression-${this.num}`);
     // let pretty = document.getElementById(`pretty${this.num}`);
+    // console.log(expr);
 
     let node = null;
 
     try {
-      node = math.parse(expr.value);
+      node = math.parse(expr.innerHTML);
       let compiledExpr = node.compile();
       that.compiledExpr = compiledExpr;
       that.drawGraphOnce(compiledExpr, that.plane.c);

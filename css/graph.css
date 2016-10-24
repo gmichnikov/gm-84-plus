@@ -176,7 +176,7 @@ canvas:active {
 }
 
 .ui-tooltip-content {
-    font-size:10px;
+    font-size:11px;
 }
 
 .ui-tooltip {
@@ -284,4 +284,14 @@ a.y-equals-hider:hover {
 .instructions a {
   background-color: red;
   color: white;
+}
+
+#hidden-expression-1, #hidden-expression-2 {
+  display: none;
+}
+
+#expression1, #expression2 {
+  width: 150px;
+  background-color: white;
+  border-radius: 5px;
 }

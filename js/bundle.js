@@ -237,9 +237,6 @@
 	
 	            ctx.textAlign = "left";
 	            ctx.font = "16px Arial";
-	            if (that.mouseX === 0) {
-	              console.log(yCoord);
-	            }
 	            var text = '(' + math.round(that.mouseX, 3) + ', ' + math.round(yCoord, 3) + ')';
 	            var textWidth = ctx.measureText(text).width;
 	            ctx.fillStyle = "yellow";
@@ -450,8 +447,8 @@
 	
 	      try {
 	        that.equations.forEach(function (eq) {
-	          var expr = document.getElementById('expression' + eq.num);
-	          var node = math.parse(expr.value);
+	          var expr = document.getElementById('hidden-expression-' + eq.num);
+	          var node = math.parse(expr.innerHTML);
 	          var compiledExpr = node.compile();
 	          eq.compiledExpr = compiledExpr;
 	        });
@@ -663,13 +660,14 @@
 	        that.plane.c = 0;
 	      }
 	
-	      var expr = document.getElementById('expression' + this.num);
+	      var expr = document.getElementById('hidden-expression-' + this.num);
 	      // let pretty = document.getElementById(`pretty${this.num}`);
+	      // console.log(expr);
 	
 	      var node = null;
 	
 	      try {
-	        node = math.parse(expr.value);
+	        node = math.parse(expr.innerHTML);
 	        var compiledExpr = node.compile();
 	        that.compiledExpr = compiledExpr;
 	        that.drawGraphOnce(compiledExpr, that.plane.c);

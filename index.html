@@ -11,15 +11,17 @@
     <script>
     $( function() {
       $( document ).tooltip({
-        hide: {
+        position: {
+          my: "center bottom",
+          at: "center top",
         }
       });
 
       let counter = 0;
-      let equationText = "x*sin(x+c)";
+      let equationText = "x^2";
       let equationInterval = setInterval(function(){
         if (counter <= equationText.length) {
-          $('#expression1').val(equationText.slice(0, counter));
+          $('#expression1')[0].innerHTML = equationText.slice(0, counter);
           $('#expression1').trigger("change");
         }
         counter++;
@@ -66,12 +68,12 @@
 
       <div class="plane-controls">
         <a class="y-equals-hider" title="Show/Hide equation editor">Y=</a>
-        <a href="#window-modal" rel="modal:open">Window</a>
+        <a href="#window-modal" rel="modal:open" title="Edit the min/max visible values of x/y in the graph">Window</a>
 
         <a class="zoom-option" id="reset-window-standard" title="Resets window to X(-10, 10)  and Y(-10, 10)">Z-Standard</a>
-        <a class="zoom-option" id="reset-window-square" title="Resets window to X(-16, 16)  and Y(-10, 10), which maintains xy proportions">Z-Square</a>
+        <a class="zoom-option" id="reset-window-square" title="Resets window to X(-16, 16) and Y(-10, 10)">Z-Square</a>
 
-        <a id="animate-graph" title="Redraws the graphs as c moves from the minimum to the maximum set below (only graphs of expressions containing c will change)" >Animate</a>
+        <a id="animate-graph" title="Shows how the graphs change as c moves from the minimum to the maximum set below (only graphs of expressions containing c will change)" >Animate</a>
 
         <span class="plane-adjust-buttons" >
           <i class="material-icons plane-adjust" id="zoom-in">zoom_in</i>
@@ -103,7 +105,10 @@
 
         <div class="equation">
           <label class="y-equals">Y1 = </label>
-          <input id="expression1" class="expression trigger-redraw" value=""/>
+          <!-- <input id="expression1" class="expression trigger-redraw" value=""/> -->
+          <div id="expression1" class="expression trigger-redraw"></div>
+          <span id ="hidden-expression-1"></span>
+
 
           <!-- <span class="pretty" id="pretty1">$$$$</span> -->
 
@@ -121,7 +126,10 @@
 
         <div class="equation">
           <label class="y-equals">Y2 = </label>
-          <input id="expression2" class="expression trigger-redraw" placeholder="Try x^2 or sin(x) or log..."/>
+          <!-- <input id="expression2" class="expression trigger-redraw" placeholder="Try x^2 or sin(x) or log..."/> -->
+          <div id="expression2" class="expression trigger-redraw"></div>
+          <span id ="hidden-expression-2"></span>
+
 
           <!-- <span class="pretty" id="pretty2">$$$$</span> -->
 
@@ -149,45 +157,48 @@
       <label>Y max: </label><input class="window-values" id="window-y-max" value="10"></input>
     </div>
 
-    <div class="else">
-      <p>Type math here: <span id="math-field"></span></p>
-      <p>LaTeX of what you typed: <span id="latex"></span></p>
-      <p>Temp holder: <span id="temp"></span></p>
 
-      <script>
-        var mathFieldSpan = document.getElementById('math-field');
-        var latexSpan = document.getElementById('latex');
+    <script>
+      var mathFieldSpan1 = document.getElementById('expression1');
+      var mathFieldSpan2 = document.getElementById('expression2');
 
-        let replaceText = function(txt) {
-          txt = txt.replace("\\l*o*g *", "log10");
-          txt = txt.replace("\\l*n *", "log");
-          txt = txt.replace("\\s*i*n *", "sin");
-          txt = txt.replace("\\c*o*s *", "cos");
-          txt = txt.replace("\\t*a*n *", "tan");
-          txt = txt.replace("a*b*s*", "abs");
-          txt = txt.replace("(*", "(");
-          txt = txt.replace("*)", ")");
-          return txt;
-        }
+      let replaceText = function(txt) {
+        txt = txt.replace("\\l*o*g *", "log10");
+        txt = txt.replace("\\l*n *", "log");
+        txt = txt.replace("\\s*i*n *", "sin");
+        txt = txt.replace("\\c*o*s *", "cos");
+        txt = txt.replace("\\t*a*n *", "tan");
+        txt = txt.replace("a*b*s*", "abs");
+        txt = txt.replace("(*", "(");
+        txt = txt.replace("*)", ")");
+        return txt;
+      }
 
-        var MQ = MathQuill.getInterface(2); // for backcompat
-        var mathField = MQ.MathField(mathFieldSpan, {
-          spaceBehavesLikeTab: true, // configurable
-          autoCommands: 'pi theta sqrt sum',
-          substituteTextarea: function() {
-            return document.createElement('textarea');
-          },
-          handlers: {
-            edit: function() { // useful event handlers
-              latexSpan.textContent = mathField.latex(); // simple API
-              console.log(replaceText(mathField.text()));
-            }
+      var MQ = MathQuill.getInterface(2);
+      var mathField1 = MQ.MathField(mathFieldSpan1, {
+        spaceBehavesLikeTab: true,
+        autoCommands: 'pi theta sqrt sum',
+        handlers: {
+          edit: function() {
+            let hiddenExpression1 = document.getElementById("hidden-expression-1");
+            hiddenExpression1.innerHTML = replaceText(mathField1.text());
           }
-        });
-        // mathField.typedText('x=-b\\pm \\sqrt b^2  - 4ac');
-      </script>
+        }
+      });
 
-    </div>
+      var mathField2 = MQ.MathField(mathFieldSpan2, {
+        spaceBehavesLikeTab: true,
+        autoCommands: 'pi theta sqrt sum',
+        handlers: {
+          edit: function() {
+            let hiddenExpression2 = document.getElementById("hidden-expression-2");
+            hiddenExpression2.innerHTML = replaceText(mathField2.text());
+          }
+        }
+      });
+
+    </script>
+
 
     <script src="./js/bundle.js" charset="utf-8"></script>
 

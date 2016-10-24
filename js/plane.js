@@ -116,9 +116,6 @@ class Plane {
 
           ctx.textAlign = "left";
           ctx.font = "16px Arial";
-          if (that.mouseX === 0) {
-            console.log(yCoord);
-          }
           let text = `(${math.round(that.mouseX, 3)}, ${math.round(yCoord, 3)})`;
           let textWidth = ctx.measureText(text).width;
           ctx.fillStyle = "yellow";
@@ -314,8 +311,8 @@ class Plane {
 
     try {
       that.equations.forEach((eq) => {
-        let expr = document.getElementById(`expression${eq.num}`);
-        let node = math.parse(expr.value);
+        let expr = document.getElementById(`hidden-expression-${eq.num}`);
+        let node = math.parse(expr.innerHTML);
         let compiledExpr = node.compile();
         eq.compiledExpr = compiledExpr;
       });
