@@ -346,7 +346,9 @@ class Plane {
       // drawSin(c)
 
       that.equations.forEach((eq) => {
-        eq.drawAnything();
+        if (!eq.hidden) {
+          eq.drawAnything();
+        }
       });
       that.axesDrawn = false;
 

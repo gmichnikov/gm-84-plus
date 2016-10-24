@@ -36,6 +36,8 @@ class Equation {
     $(`#trace-mode${this.num}`).on("click", () => {
       that.traceMode = !that.traceMode;
       if($(`#trace-mode${this.num}`)[0].checked) {
+        $(`#hide-graph${this.num}`)[0].checked = false;
+        that.hidden = false;
         that.plane.tracing = true;
         that.plane.equations.forEach((eq) => {
           if (eq.num !== this.num) {
@@ -54,6 +56,13 @@ class Equation {
 
   toggleHide() {
     this.hidden = !this.hidden;
+    if (this.hidden) {
+      if (this.traceMode) {
+        this.traceMode = false;
+        this.plane.tracing = false;
+        $(`#trace-mode${this.num}`)[0].checked = false;
+      }
+    }
     this.plane.logAllEquations();
   }
 

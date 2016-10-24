@@ -481,7 +481,9 @@
 	        // drawSin(c)
 	
 	        that.equations.forEach(function (eq) {
-	          eq.drawAnything();
+	          if (!eq.hidden) {
+	            eq.drawAnything();
+	          }
 	        });
 	        that.axesDrawn = false;
 	
@@ -614,6 +616,8 @@
 	      $('#trace-mode' + this.num).on("click", function () {
 	        that.traceMode = !that.traceMode;
 	        if ($('#trace-mode' + _this.num)[0].checked) {
+	          $('#hide-graph' + _this.num)[0].checked = false;
+	          that.hidden = false;
 	          that.plane.tracing = true;
 	          that.plane.equations.forEach(function (eq) {
 	            if (eq.num !== _this.num) {
@@ -632,6 +636,13 @@
 	    key: 'toggleHide',
 	    value: function toggleHide() {
 	      this.hidden = !this.hidden;
+	      if (this.hidden) {
+	        if (this.traceMode) {
+	          this.traceMode = false;
+	          this.plane.tracing = false;
+	          $('#trace-mode' + this.num)[0].checked = false;
+	        }
+	      }
 	      this.plane.logAllEquations();
 	    }
 	  }, {
