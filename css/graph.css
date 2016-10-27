@@ -337,3 +337,26 @@ a.y-equals-hider:hover {
   padding: 0 4px;
   border-radius: 5px;
 }
+
+#instructions-modal span {
+  font-weight: bold;
+  vertical-align: top;
+}
+
+.y-equals-description {
+  background-color: darkgoldenrod;
+}
+
+.window-description {
+  background-color: rgb(60, 80, 130);
+}
+
+.animate-description {
+  background-color: teal;
+}
+
+.y-equals-description, .animate-description, .window-description {
+  color: white;
+  padding: 3px;
+  border-radius: 5px;
+}
