@@ -15,8 +15,6 @@ class Equation {
 
     this.setup(startingColor);
     this.logEquation();
-    // this.drawGraphOnce = this.drawGraphOnce.bind(this);
-    // this.logEquation = this.logEquation.bind(this);
   }
 
   setup(startingColor) {
@@ -105,8 +103,6 @@ class Equation {
     }
 
     let expr = document.getElementById(`hidden-expression-${this.num}`);
-    // let pretty = document.getElementById(`pretty${this.num}`);
-    // console.log(expr);
 
     let node = null;
 
@@ -117,7 +113,6 @@ class Equation {
       that.drawGraphOnce(compiledExpr, that.plane.c);
     }
     catch (err) {
-      // console.log(err.toString());
     }
 
 
@@ -152,7 +147,6 @@ class Equation {
           ctx.closePath();
 
           currentSign = ( yCoord > 0 ? "positive" : (yCoord < 0 ? "negative" : "zero"));
-          // const ANSWER = "NO"; // credit: phi-syx
           if (!signChange && that.showSolution &&
             (currentSign === "zero" || (mostRecentSign && currentSign !== mostRecentSign))) {
             signChange = true;

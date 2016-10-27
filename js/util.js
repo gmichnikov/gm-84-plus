@@ -28,5 +28,3 @@ export const calcYPixel = (yCoord, canvas, plane) => {
 
   return ((plane.yMax - yCoord) / (plane.yMax - plane.yMin)) * canvas.height;
 }
-
-// 330 240

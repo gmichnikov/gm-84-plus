@@ -62,7 +62,6 @@
 	var ctx = canvas.getContext("2d");
 	
 	var plane = new _plane2.default(ctx);
-	// plane.drawAxes();
 
 /***/ },
 /* 1 */
@@ -256,8 +255,6 @@
 	          ctx.fillText(_text, 20, 20);
 	          that.axesDrawn = false;
 	        }
-	        // console.log(that.mouseXPixel, that.mouseYPixel);
-	        // console.log(that.mouseX, that.mouseY);
 	      }
 	
 	      window.requestAnimationFrame(function () {
@@ -333,7 +330,6 @@
 	  }, {
 	    key: 'mouseInBounds',
 	    value: function mouseInBounds() {
-	      // console.log(this.mouseXPixel, this.mouseYPixel);
 	      return this.mouseXPixel > 0 && this.mouseXPixel < this.canvas.width && this.mouseYPixel > 0 && this.mouseYPixel < this.canvas.height;
 	    }
 	  }, {
@@ -406,11 +402,9 @@
 	      this.ctx.beginPath();
 	      this.ctx.rect(0, this.xAxisPixelsDown, this.canvas.width, 1); // x axis
 	      this.ctx.rect(this.yAxisPixelsOver, 0, 1, this.canvas.height); // y axis
-	      // this.ctx.fillStyle = "#FF0000";
 	      this.ctx.fillStyle = "black";
 	      this.ctx.fill();
 	      this.ctx.closePath();
-	      // this.drawAxisLabels();
 	    }
 	  }, {
 	    key: 'drawAxisLabels',
@@ -444,8 +438,6 @@
 	    key: 'animateGraphNow',
 	    value: function animateGraphNow() {
 	      var that = this;
-	      // let drawButton = document.getElementById('animate-graph');
-	      // drawButton.disabled = true;
 	
 	      try {
 	        that.equations.forEach(function (eq) {
@@ -476,8 +468,6 @@
 	          that.drawAxes();
 	          that.axesDrawn = true;
 	        }
-	        // drawParabola(c)
-	        // drawSin(c)
 	
 	        that.equations.forEach(function (eq) {
 	          if (!eq.hidden) {
@@ -492,10 +482,7 @@
 	        that.c = math.round(that.c + cIncrementVal, 2);
 	        if (that.c <= cMaxVal) {
 	          window.requestAnimationFrame(step);
-	        } else {
-	          // let drawButton = document.getElementById('animate-graph');
-	          // drawButton.disabled = false;
-	        }
+	        } else {}
 	      }
 	      window.requestAnimationFrame(step);
 	    }
@@ -543,8 +530,6 @@
 	
 	    this.setup(startingColor);
 	    this.logEquation();
-	    // this.drawGraphOnce = this.drawGraphOnce.bind(this);
-	    // this.logEquation = this.logEquation.bind(this);
 	  }
 	
 	  _createClass(Equation, [{
@@ -646,8 +631,6 @@
 	      }
 	
 	      var expr = document.getElementById('hidden-expression-' + this.num);
-	      // let pretty = document.getElementById(`pretty${this.num}`);
-	      // console.log(expr);
 	
 	      var node = null;
 	
@@ -656,9 +639,7 @@
 	        var compiledExpr = node.compile();
 	        that.compiledExpr = compiledExpr;
 	        that.drawGraphOnce(compiledExpr, that.plane.c);
-	      } catch (err) {
-	        // console.log(err.toString());
-	      }
+	      } catch (err) {}
 	    }
 	  }, {
 	    key: 'drawAnything',
@@ -690,7 +671,6 @@
 	            ctx.closePath();
 	
 	            currentSign = yCoord > 0 ? "positive" : yCoord < 0 ? "negative" : "zero";
-	            // const ANSWER = "NO"; // credit: phi-syx
 	            if (!signChange && that.showSolution && (currentSign === "zero" || mostRecentSign && currentSign !== mostRecentSign)) {
 	              signChange = true;
 	              solutionCoords = that.drawSolution(xCoord, yCoord, currentSign);
@@ -785,8 +765,6 @@
 	
 	  return (plane.yMax - yCoord) / (plane.yMax - plane.yMin) * canvas.height;
 	};
-	
-	// 330 240
 
 /***/ }
 /******/ ]);

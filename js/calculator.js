@@ -5,4 +5,3 @@ var canvas = document.getElementById("myCanvas");
 var ctx = canvas.getContext("2d");
 
 const plane = new Plane(ctx);
-// plane.drawAxes();

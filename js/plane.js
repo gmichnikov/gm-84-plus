@@ -136,8 +136,6 @@ class Plane {
 
 
       }
-      // console.log(that.mouseXPixel, that.mouseYPixel);
-      // console.log(that.mouseX, that.mouseY);
     }
 
     window.requestAnimationFrame(() => this.dragUpdate());
@@ -202,7 +200,6 @@ class Plane {
   }
 
   mouseInBounds() {
-    // console.log(this.mouseXPixel, this.mouseYPixel);
     return this.mouseXPixel > 0 && this.mouseXPixel < this.canvas.width && this.mouseYPixel > 0 && this.mouseYPixel < this.canvas.height;
 
   }
@@ -269,11 +266,9 @@ class Plane {
     this.ctx.beginPath();
     this.ctx.rect(0, this.xAxisPixelsDown, this.canvas.width, 1); // x axis
     this.ctx.rect(this.yAxisPixelsOver, 0, 1, this.canvas.height); // y axis
-    // this.ctx.fillStyle = "#FF0000";
     this.ctx.fillStyle = "black";
     this.ctx.fill();
     this.ctx.closePath();
-    // this.drawAxisLabels();
   }
 
   drawAxisLabels() {
@@ -307,8 +302,7 @@ class Plane {
 
   animateGraphNow() {
     let that = this;
-    // let drawButton = document.getElementById('animate-graph');
-    // drawButton.disabled = true;
+
 
     try {
       that.equations.forEach((eq) => {
@@ -340,8 +334,6 @@ class Plane {
         that.drawAxes();
         that.axesDrawn = true;
       }
-      // drawParabola(c)
-      // drawSin(c)
 
       that.equations.forEach((eq) => {
         if (!eq.hidden) {
@@ -357,8 +349,6 @@ class Plane {
       if (that.c <= cMaxVal) {
         window.requestAnimationFrame(step);
       } else {
-        // let drawButton = document.getElementById('animate-graph');
-        // drawButton.disabled = false;
       }
     }
     window.requestAnimationFrame(step);
