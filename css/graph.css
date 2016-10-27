@@ -330,3 +330,10 @@ a.y-equals-hider:hover {
 #instructions-modal p {
   padding: 5px;
 }
+
+.solution-checkbox {
+  margin-left: 10px;
+  background-color: #eee;
+  padding: 0 4px;
+  border-radius: 5px;
+}

@@ -19,10 +19,14 @@ export const calcYCoord = (yPixel, canvas, plane) => {
 }
 
 
+export const calcXPixel = (xCoord, canvas, plane) => {
+
+  return ((xCoord - plane.xMin) / (plane.xMax - plane.xMin)) * canvas.width;
+}
+
 export const calcYPixel = (yCoord, canvas, plane) => {
 
   return ((plane.yMax - yCoord) / (plane.yMax - plane.yMin)) * canvas.height;
 }
-
 
 // 330 240
