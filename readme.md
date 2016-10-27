@@ -1,18 +1,18 @@
 # GM-84 Plus
 
 [Live!][gm84plus]
-[gm84plus]: https://gmichnikov.github.io/gm-84-plus/
+[gm84plus]: https://www.gregmichnikov.com/gm-84-plus/
 
 ## Summary
 
-GM-84 Plus is a browser-based graphing calculator. It allows users to graph math functions multi-color, trace the values of the functions, and animate the functions to see how the graphs change as a variable within the function changes.
+GM-84 Plus is a browser-based graphing calculator. It allows users to graph math functions in multi-color, trace the values of the functions, find solutions (aka zeros) of the functions, and animate the functions to see how the graphs change as a variable within the function changes.
 
 Other features include drag-and-drop window movement, zoom in/out on any point via mouse scroll, and immediate pretty-printing of equations.
 
 ## Instructions
 
-+ In the left panel, type in the equations that you would like to graph. You can choose a color, choose to hide the graph, or choose trace mode. Trace Mode allows you to move your mouse in the plane and see the x-y values of this graph as you move.
-+ Basic features include zoom in/out by scrolling your mouse, and panning to differnet parts of the plane by dragging/dropping with your mouse. You can also zoom/pan using the buttons at the bottom right of the canvas.
++ In the left panel, type in the equations that you would like to graph. You can choose a color, choose to hide the graph, choose trace mode, or choose to see a solution. Trace Mode allows you to move your mouse in the plane and see the x-y values of this graph as you move. Solution shows you the left-most visible solution. Panning the x-y plane to the left/right allows you to see each of the solutions.
++ Basic features include zoom in/out by scrolling your mouse, and panning to different parts of the plane by dragging/dropping with your mouse. You can also zoom/pan using the buttons at the bottom right of the canvas.
 + The yellow Y= button shows/hides the left panel.
 + The blue buttons allow you to adjust the window, i.e. determine which parts of the x-y plane are visible. You can choose z-standard (the default); z-square, which adjusts the window so that the x/y ratio matches that of the canvas itself; or custom.
 + Animate shows you how your graph changes as the value of the variable c changes. The graph will only look animated if your equation includes a variable c, as the two provided examples do. You can adjust the min/max of c on either side of the slider.
