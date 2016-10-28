@@ -1,7 +1,7 @@
 # GM-84 Plus
 
 [Live!][gm84plus]
-[gm84plus]: https://www.gregmichnikov.com/gm-84-plus/
+[gm84plus]: http://www.gregmichnikov.com/gm-84-plus/
 
 ## Summary
 
@@ -30,25 +30,54 @@ Other features include drag-and-drop window movement, zoom in/out on any point v
 ## Features
 
 ### Drag and Drop Panning
-coming soon
+GM-84 Plus includes a custom drag-and-drop panning implementation. It listens for mouse presses and then tracks the movement of the mouse, adjusting the window, axes, and graphs in real-time. The code below 1) calculates the number of pixels that the xy-plane has been dragged; 2) resets the `dragstart` to the current position; 3) converts the dragging distance from pixels to xy units; 4) adjusts the calculator's window to reflect the mouse movement. This happens in every animation frame, about 60 times per second.
+
+```javascript
+if (that.drag) {
+  pixelsDraggedX = that.mouseXPixel - that.dragstartX;
+  pixelsDraggedY = that.mouseYPixel - that.dragstartY;
+  that.dragstartX = that.mouseXPixel;
+  that.dragstartY = that.mouseYPixel;
+}
+
+if (math.abs(pixelsDraggedY) > 0 || math.abs(pixelsDraggedX) > 0) {
+  unitsDraggedX = (pixelsDraggedX / that.canvas.width) * (that.xMax - that.xMin);
+  unitsDraggedY = -(pixelsDraggedY / that.canvas.height) * (that.yMax - that.yMin);
+  this.resetWindow(that.xMin - unitsDraggedX, that.xMax - unitsDraggedX, that.yMin - unitsDraggedY, that.yMax - unitsDraggedY);
+}
+
+window.requestAnimationFrame(() => this.dragUpdate());
+```
 
 ### Scroll-Zoom
-coming soon
+GM-84 also allows users to zoom in or out using the mouse. It treats zooming as a dilation and re-calculates the window accordingly. If the zooming comes from the mouse, the point of dilation is the mouse's location; if the zoom comes from the magnifying glass, the center of the visible window serves as the center of dilation.
+
+```javascript
+let centerX = (this.xMax + this.xMin)/2;
+let dilationX = (button ? centerX : this.mouseX);
+this.xMax = (this.xMax - dilationX) * multiplier + dilationX;
+this.xMin = dilationX - (dilationX - this.xMin) * multiplier;
+```
 
 ### Animation
-coming soon
+The calculator allows users to observe how the graph of an equation changes when a variable `c` moves between a user-defined minimum and maximum.
+![screenshot](http://gregmichnikov.com/images/gm-84-plus.gif)
 
+### Finding Zeros/Solutions
+GM-84 Plus finds the left-most visible solution/zero of an equation by:
+1. Observing when the sign of the y-value switches from positive to negative
+2. Using Newton's method (repeatedly) to get a very accurate x-value, as shown in the code below
+```javascript
+nearbyX = xCoord + 0.01;
+nearbyY = parseFloat(math.format(that.compiledExpr.eval({x: nearbyX, c: that.plane.c})));
+derivative = (nearbyY - yCoord) / 0.01;
+xCoord = xCoord - yCoord/derivative;
+yCoord = parseFloat(math.format(that.compiledExpr.eval({x: xCoord, c: that.plane.c})));
+```
 
 ## Next steps for further development of GM-84 Plus
 
-#### Solutions, Min/Max
-- Adding more features that replicate the calculation ability of the real deal!
-
-#### More sample graphs
-- Currently there are just the two that are typed in upon coming to the site
-
-#### Gridlines
--  Allowing more options in addition to the axes-only style currently used
-
-#### Polar
-- Supporting polar coordinates, in order to allow equations of the form r(theta)
+- Adding more analytical features that replicate the calculation ability of a real graphing calculator (e.g. min/max)
+- Adding more sample graphs for the user to experiment with in addition to the two that are preloaded
+- Allowing more gridlines options in addition to the axes-only style currently used
+- Supporting polar coordinates, in order to allow functions of the form r(theta)
