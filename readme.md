@@ -65,8 +65,8 @@ The calculator allows users to observe how the graph of an equation changes when
 
 ### Finding Zeros/Solutions
 GM-84 Plus finds the left-most visible solution/zero of an equation by:
-1. Observing when the sign of the y-value switches from positive to negative
-2. Using Newton's method (repeatedly) to get a very accurate x-value, as shown in the code below
+  1. Observing when the sign of the y-value switches from positive to negative
+  2. Using Newton's method (repeatedly) to get a very accurate x-value, as shown in the code below
 ```javascript
 nearbyX = xCoord + 0.01;
 nearbyY = parseFloat(math.format(that.compiledExpr.eval({x: nearbyX, c: that.plane.c})));
