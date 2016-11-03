@@ -660,9 +660,11 @@
 	        var scope = { x: xCoord, c: that.plane.c };
 	
 	        try {
+	          var notReal = math.format(that.compiledExpr.eval(scope)).includes("i");
 	          var yCoord = parseFloat(math.format(that.compiledExpr.eval(scope)));
+	          // if (-3 < xCoord && xCoord < -2) console.log(notReal, yCoord);
 	
-	          if (!isNaN(yCoord)) {
+	          if (!isNaN(yCoord) && !notReal) {
 	            var yPixel = UTIL.calcYPixel(parseFloat(yCoord), canvas, that.plane);
 	            ctx.beginPath();
 	            ctx.arc(xPixel, yPixel, 3, 0, Math.PI * 2);

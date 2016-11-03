@@ -136,9 +136,11 @@ class Equation {
       let scope = {x: xCoord, c: that.plane.c}
 
       try {
+        let notReal = math.format(that.compiledExpr.eval(scope)).includes("i");
         let yCoord = parseFloat(math.format(that.compiledExpr.eval(scope)));
+        // if (-3 < xCoord && xCoord < -2) console.log(notReal, yCoord);
 
-        if (!isNaN(yCoord)) {
+        if (!isNaN(yCoord) && !notReal) {
           let yPixel = UTIL.calcYPixel(parseFloat(yCoord), canvas, that.plane);
           ctx.beginPath();
           ctx.arc(xPixel, yPixel, 3, 0, Math.PI*2);
